@@ -1,0 +1,35 @@
+:root{--page-bg:#9DBEF5}
+.home-shell{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+.home{flex:1 0 440px;background:#EEF4FF}
+
+/* Sign nav: evenly spaced, standing mid-table */
+.home-signs{position:absolute;left:0;right:0;bottom:26.5%;height:0;pointer-events:auto;--legs-h:clamp(20px,4.2vh,40px);--stand-shadow:rgba(12,58,133,.45);--sign-lift:rgba(12,58,133,.25)}
+.home-sign{position:absolute;bottom:0;transform:translateX(-50%);width:clamp(92px,min(16vw,21vh),240px);display:flex;flex-direction:column;align-items:center}
+.home-sign .sign{gap:clamp(6px,1.2vh,12px);padding:clamp(8px,1.6vh,20px) clamp(8px,1.2vw,16px) clamp(8px,1.6vh,18px)}
+.home-sign .sign-tile{width:clamp(28px,min(3.6vw,5vh),54px);height:clamp(28px,min(3.6vw,5vh),54px)}
+.home-sign-label{font:700 clamp(13px,min(1.75vw,2.5vh),25px)/1.1 var(--font-display);letter-spacing:var(--ls-heading);text-align:center;text-wrap:balance;min-height:2.2em;display:flex;align-items:center;justify-content:center}
+
+/* Speech bubble — positioned by placeBubble() on wide screens, docked at the bottom on narrow ones */
+.home-bubble{position:absolute;z-index:6;left:calc(50% + 19vh);top:30%;width:200px;padding:clamp(10px,1.6vh,14px) 14px clamp(12px,1.8vh,16px);gap:6px}
+.js .home-bubble:not(.is-placed){visibility:hidden}
+.home-bubble-narrow{position:absolute;z-index:6;bottom:9%;left:4%;right:4%;box-shadow:var(--shadow-hard-sm);padding:10px 12px 12px;gap:4px}
+.home-bubble-narrow strong{font:700 16px/1.15 var(--font-display);color:var(--slate-900)}
+.home-bubble-narrow span{font:500 13px/1.4 var(--font-body);color:var(--slate-700)}
+
+/* narrow = phone in portrait: width < 760 and height > 0.9 × width */
+.home-narrow-only{display:none}
+@media (max-width:759.98px) and (max-aspect-ratio:10/9){
+  .home-wide-only{display:none !important}
+  .home-narrow-only{display:flex}
+}
+
+/* Legal bar */
+.legal{flex:none;position:relative;z-index:5;min-height:36px;padding:8px clamp(12px,3vw,32px);background:var(--blue-900);color:#FFFFFF;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;column-gap:10px;row-gap:2px;font:500 12px/1.4 var(--font-body);text-align:center}
+.legal a{color:#FFFFFF;text-decoration:underline;text-underline-offset:2px}
+.legal a:hover{color:#FFFFFF}
+.legal-short{display:none}
+@media (max-width:759.98px){
+  .legal-full{display:none}
+  .legal-short{display:inline;font-size:11px}
+  .legal a{font-size:11px;padding:4px 0}
+}

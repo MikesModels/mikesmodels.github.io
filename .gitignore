@@ -1,0 +1,55 @@
+# Build output and dependencies
+node_modules/
+dist/
+
+# Full-resolution source images stay on this PC; only the web-sized copies
+# that `npm run images` writes into src/assets/ and public/ are committed.
+assets-src/
+
+# ---- 3D model and print files: NEVER commit these. This repo is public. ----
+# (scripts/check-no-models.mjs enforces the same list on commit and on deploy.)
+*.stl
+*.3mf
+*.obj
+*.mtl
+*.amf
+*.ply
+*.step
+*.stp
+*.iges
+*.igs
+*.f3d
+*.f3z
+*.fcstd
+*.scad
+*.sldprt
+*.sldasm
+*.ipt
+*.iam
+*.blend
+*.blend1
+*.fbx
+*.dae
+*.3ds
+*.max
+*.c4d
+*.ma
+*.mb
+*.ztl
+*.zpr
+*.glb
+*.gltf
+*.usdz
+*.gcode
+*.bgcode
+*.lys
+*.chitubox
+*.ctb
+*.zip
+*.7z
+*.rar
+
+# OS / editor noise
+Thumbs.db
+desktop.ini
+.DS_Store

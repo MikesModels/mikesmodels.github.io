@@ -1,0 +1,3 @@
+#!/bin/sh
+# Blocks commits that include 3D model/print files or oversized originals. See scripts/check-no-models.mjs.
+exec node scripts/check-no-models.mjs

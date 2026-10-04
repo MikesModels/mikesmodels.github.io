@@ -1,0 +1,38 @@
+<div class="desk" style="{{pos}}">
+    <svg aria-hidden="true" viewBox="0 0 520 300" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;{{#if flip}}transform:scaleX(-1);{{/if}}">
+        <ellipse cx="260" cy="296" rx="252" ry="9" fill="rgba(0,0,0,.28)"></ellipse>
+        <rect x="44" y="60" width="16" height="234" fill="#39404F"></rect>
+        <rect x="460" y="60" width="16" height="234" fill="#39404F"></rect>
+        <rect x="60" y="236" width="400" height="10" fill="#4B5263"></rect>
+        <rect x="286" y="60" width="160" height="150" fill="#ECEEF2" stroke="#39404F" stroke-width="2"></rect>
+        <line x1="286" y1="135" x2="446" y2="135" stroke="#39404F" stroke-width="2"></line>
+        <rect x="346" y="94" width="40" height="8" rx="2" fill="#39404F"></rect>
+        <rect x="346" y="168" width="40" height="8" rx="2" fill="#39404F"></rect>
+        <path d="M178 -84 L206 -78 L330 32 L130 32 Z" fill="#FFF3C8" opacity=".16"></path>
+        <path d="M36 2 L484 2 L506 40 L14 40 Z" fill="#F6F7F9" stroke="#39404F" stroke-width="2" stroke-linejoin="round"></path>
+        <path d="M130 30 L330 30 L310 8 L150 8 Z" fill="#FFF3C8" opacity=".35"></path>
+        <rect x="14" y="40" width="492" height="22" fill="#DCDFE6" stroke="#39404F" stroke-width="2"></rect>
+        <ellipse cx="78" cy="22" rx="24" ry="7" fill="#39404F"></ellipse>
+        <path d="M78 20 L104 -58 L176 -94" stroke="#39404F" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+        <circle cx="104" cy="-58" r="6" fill="#1F6FEB" stroke="#39404F" stroke-width="2"></circle>
+        <path d="M164 -112 L212 -98 L204 -76 L170 -86 Z" fill="#1F6FEB" stroke="#39404F" stroke-width="2" stroke-linejoin="round"></path>
+        <rect x="352" y="10" width="70" height="14" rx="7" fill="#7FA9F6" stroke="#39404F" stroke-width="2"></rect>
+        <ellipse cx="422" cy="17" rx="4" ry="7" fill="#B3CDFB" stroke="#39404F" stroke-width="2"></ellipse>
+        <rect x="438" y="-12" width="26" height="30" rx="3" fill="#FFFFFF" stroke="#39404F" stroke-width="2"></rect>
+        <rect x="438" y="-2" width="26" height="6" fill="#01CBFE"></rect>
+        <path d="M464 -4 Q476 -2 474 8 Q472 14 464 14" stroke="#39404F" stroke-width="2" fill="none"></path>
+    </svg>
+    <div class="desk-sign">
+      <div aria-hidden="true" class="desk-arrow">
+        <div data-anim="bounce" style="width:100%;height:100%;">
+          <svg viewBox="0 0 44 54" style="display:block;width:100%;height:100%;overflow:visible;"><path d="M14 2 L30 2 L30 26 L42 26 L22 52 L2 26 L14 26 Z" fill="#01CBFE" stroke="#1B1F27" stroke-width="2.5" stroke-linejoin="round"></path></svg>
+        </div>
+      </div>
+      <a href="{{root}}custom-request/?type={{key}}" data-key="{{key}}" class="sign">
+        <span class="sign-tile"><x-icon name="{{icon}}" size="26"></x-icon></span>
+        <span class="desk-q">{{q}}</span>
+        <span class="desk-a">{{a}}</span>
+      </a>
+      <x-include src="sign-stand"></x-include>
+    </div>
+</div>

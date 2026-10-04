@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<x-include src="head" title="The Gallery — Mike's Models" description="Walk the gallery of Mike's Models: flexi dragons, gear toys, gadgets and engineering prints, each with a close-up and price." theme="#1B1F27"></x-include>
+<script type="module" src="/src/pages/gallery.ts"></script>
+</head>
+<body>
+<main class="gallery">
+  <div data-stage class="g-stage">
+    <div data-world class="g-world">
+      <div data-end style="position:absolute;left:-650px;top:-400px;width:1300px;height:800px;box-sizing:border-box;overflow:hidden;background:repeating-linear-gradient(45deg,rgba(57,64,79,.04) 0 1px,rgba(57,64,79,0) 1px 22px),repeating-linear-gradient(-45deg,rgba(57,64,79,.04) 0 1px,rgba(57,64,79,0) 1px 22px),radial-gradient(circle,rgba(57,64,79,.06) 0 2px,rgba(57,64,79,0) 3px) 0 0/31.1px 31.1px,#C4CBD6;display:flex;flex-direction:column;align-items:center;padding-top:112px;gap:24px;">
+        <div style="position:absolute;left:200px;top:46px;width:900px;height:640px;background:radial-gradient(ellipse 50% 90% at 50% 0%,rgba(255,241,214,.7),rgba(255,236,200,.25) 45%,rgba(255,236,200,0) 75%);"></div>
+        <div style="position:absolute;left:0;right:0;top:46px;height:90px;background:linear-gradient(rgba(14,18,26,.24),rgba(14,18,26,0));"></div>
+        <div style="position:absolute;left:0;right:0;top:0;height:46px;background:repeating-linear-gradient(90deg,#F4F6F9 0 10px,#9AA1AD 10px 12px,#D5DAE2 12px 18px) 0 30px/100% 10px no-repeat,linear-gradient(180deg,#9AA1AD 0 5px,#F7F8FA 5px 13px,#C2C7D1 13px 17px,#FFFFFF 17px 24px,#DCDFE6 24px 30px,#DCDFE6 40px);border-bottom:2px solid #687082;box-shadow:0 4px 8px rgba(0,0,0,.24);"></div>
+        <div style="position:absolute;left:0;right:0;top:556px;height:16px;background:linear-gradient(#FFFFFF 0 3px,#DCDFE6 3px 9px,#9AA1AD 9px 11px,#ECEEF2 11px 14px,#687082 14px);box-shadow:0 5px 6px rgba(0,0,0,.3);z-index:1;"></div>
+        <div style="position:absolute;left:0;right:0;top:572px;bottom:40px;background:linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,0) 30px),#0E2F66;display:flex;gap:28px;padding:28px 62px 26px;box-sizing:border-box;">
+          <div style="flex:1;background:linear-gradient(rgba(255,255,255,.05),rgba(0,0,0,.12)),#0F3470;box-shadow:inset 2px 2px 0 rgba(255,255,255,.16),inset -2px -2px 0 rgba(0,0,0,.4),0 0 0 7px #0C2A5A,0 0 0 8px rgba(232,161,50,.6);"></div>
+          <div style="flex:1;background:linear-gradient(rgba(255,255,255,.05),rgba(0,0,0,.12)),#0F3470;box-shadow:inset 2px 2px 0 rgba(255,255,255,.16),inset -2px -2px 0 rgba(0,0,0,.4),0 0 0 7px #0C2A5A,0 0 0 8px rgba(232,161,50,.6);"></div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:40px;background:linear-gradient(rgba(232,161,50,.6) 0 1px,#39404F 1px 3px,#1B2536 3px 36px,#0E1320 36px);"></div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:60px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.22));"></div>
+        <div style="position:relative;background:#FFFFFF;border:3px solid var(--slate-700);border-radius:4px;padding:14px 28px;box-shadow:6px 6px 0 #2A2F3A;line-height:0;"><img src="/src/assets/img/logo-tr-480.webp" width="220" height="110" alt="" loading="lazy" style="height:110px;width:auto;"></div>
+        <p style="position:relative;margin:0;font:700 60px/1.05 var(--font-display);letter-spacing:var(--ls-display);color:var(--slate-900);text-align:center;">That's the collection so far.</p>
+        <p style="position:relative;margin:0;font:500 30px/1.3 var(--font-body);color:var(--slate-700);">Got an idea for case <span data-next-case>13</span>?</p>
+        <a href="{{root}}custom-design/" class="g-end-cta">Start a custom design</a>
+        <div data-end-shade style="position:absolute;inset:0;background:#07090E;opacity:0;transition:opacity 1100ms cubic-bezier(.45,0,.2,1);pointer-events:none;"></div>
+      </div>
+    </div>
+    <div aria-hidden="true" class="g-vignette"></div>
+    <div data-focus class="g-focus"></div>
+  </div>
+
+  <x-include src="back-link"></x-include>
+
+  <!-- Title plate -->
+  <header class="g-title g-ctrl">
+    <h1>The Gallery</h1>
+    <span>Click any case for a closer look.</span>
+    <span>Scroll or use the arrows to move.</span>
+  </header>
+
+  <!-- Keyboard / screen-reader route to every case -->
+  <nav aria-label="Display cases" class="sr-only"><ul data-case-list></ul></nav>
+
+  <!-- Walk controls -->
+  <div class="g-walk g-ctrl">
+    <button type="button" class="g-walk-btn g-walk-fwd" data-fwd aria-label="Walk forward" title="Walk forward"><x-icon name="arrow-up" size="24"></x-icon></button>
+    <button type="button" class="g-walk-btn g-walk-back" data-back aria-label="Step back" title="Step back"><x-icon name="arrow-down" size="24"></x-icon></button>
+  </div>
+
+  <!-- Close-up info -->
+  <section data-panel role="dialog" aria-labelledby="g-panel-h" aria-hidden="true" class="g-panel" inert>
+    <div class="g-panel-card">
+      <div class="g-plaque">
+        <span class="g-plaque-num">CASE <span data-p="num">01</span> OF <span data-p="total">12</span></span>
+        <h2 id="g-panel-h" data-p="name"></h2>
+        <p data-p="desc"></p>
+        <p class="g-plaque-origin"><strong>Origin:</strong> <span data-p="origin"></span></p>
+        <div class="g-plaque-price">
+          <span>PRICE</span>
+          <span data-p="price"></span>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <a class="btn btn--primary" data-p-mailto href="mailto:mikes3dmodels@gmail.com"><x-icon name="mail" size="18"></x-icon>Ask about this one</a>
+        <button type="button" class="btn btn--secondary" data-close><x-icon name="arrow-left" size="18"></x-icon>Back to the hall</button>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

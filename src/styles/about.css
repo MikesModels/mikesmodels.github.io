@@ -1,0 +1,55 @@
+:root{--page-bg:#9DBEF5}
+.about{height:100vh;height:100dvh;min-height:600px;background:#EEF4FF}
+
+.about-banner{position:absolute;top:calc(4% + 14px);left:50%;transform:translateX(-50%);z-index:3}
+.about-string{position:absolute;top:0;width:4px;height:20px;background:var(--slate-900);border-radius:2px}
+
+/* Speech-bubble stack (sizes and the compact contact card are set by layout() in about.ts) */
+.about-stack{position:absolute;z-index:6;left:calc(22% + 11vh);top:max(15%,110px);width:380px;display:flex;flex-direction:column;gap:clamp(18px,4vh,40px)}
+.about-stack-narrow{position:absolute;z-index:6;left:4%;right:4%;top:calc(4% + 138px);display:flex;flex-direction:column;gap:10px}
+.about-say{position:relative;padding:clamp(14px,2vh,20px) clamp(16px,1.6vw,22px) clamp(16px,2.2vh,22px);gap:8px}
+.about-say strong{font:700 clamp(19px,2.6vh,25px)/1.12 var(--font-display);letter-spacing:var(--ls-heading);color:var(--slate-900);text-wrap:balance}
+.about-say span{font:500 clamp(14px,1.9vh,17px)/1.5 var(--font-body);color:var(--slate-700);text-wrap:pretty}
+.about-contact-card{flex-direction:row;align-items:center;gap:12px;padding:12px 16px}
+.about-contact-card strong{font:700 18px/1.1 var(--font-display);letter-spacing:var(--ls-heading);color:var(--slate-900)}
+.about-contact-card a{font:600 15px/1.2 var(--font-display);color:var(--blue-600);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;overflow-wrap:anywhere}
+.about-contact-card a:hover,.about-email:hover{color:var(--blue-800);text-decoration-thickness:2px}
+
+.about-mike{position:absolute;left:22%;bottom:1%;transform:translateX(-43%);height:76%;aspect-ratio:420/720;z-index:4}
+
+/* Signs on the table */
+.about-post{position:absolute;bottom:27%;z-index:5;display:flex;flex-direction:column;align-items:center}
+.about-tile{width:clamp(36px,min(3.8vw,5.6vh),56px);height:clamp(36px,min(3.8vw,5.6vh),56px)}
+.about-h2{margin:0;font:700 clamp(20px,min(2vw,3vh),28px)/1.1 var(--font-display);letter-spacing:var(--ls-heading);color:var(--slate-900);text-align:center}
+.about-contact-sign{gap:clamp(6px,1.2vh,12px);padding:clamp(12px,2vh,22px) clamp(12px,1.4vw,20px) clamp(14px,2.2vh,22px)}
+.about-email{font:600 clamp(14px,1.25vw,18px)/1.2 var(--font-display);color:var(--blue-600);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;white-space:nowrap;text-align:center}
+.about-reviews{align-items:stretch;gap:clamp(6px,1.2vh,12px);padding:clamp(12px,2vh,22px) clamp(12px,1.4vw,20px) clamp(14px,2.2vh,22px)}
+
+/* Review list + custom scrollbar */
+.about-list{flex:1;min-width:0;overflow-y:auto;scrollbar-width:none;outline:none;display:flex;flex-direction:column}
+.about-list::-webkit-scrollbar{display:none}
+.about-list:focus-visible{box-shadow:var(--focus-ring)}
+.about-track{position:relative;width:8px;flex:none;background:var(--slate-100);border:1px solid var(--slate-200);border-radius:2px;cursor:pointer}
+.about-thumb{position:absolute;left:-1px;right:-1px;top:0;background:var(--slate-700);border-radius:2px;cursor:grab;touch-action:none}
+.review{display:flex;flex-direction:column;gap:5px;padding:10px 0 12px;border-bottom:1px solid var(--slate-200)}
+.review-who{font:500 clamp(14px,1.9vh,16px)/1.3 var(--font-body);color:var(--slate-600)}
+.review-who strong{font:700 clamp(14px,1.9vh,16px)/1.3 var(--font-display);color:var(--slate-900)}
+.review-stars{display:flex;gap:2px}
+.review-text{font:500 clamp(13px,1.8vh,15px)/1.45 var(--font-body);color:var(--slate-700);text-wrap:pretty}
+.review-empty{margin:auto 0;padding:12px 4px;display:flex;flex-direction:column;gap:6px;text-align:center}
+.review-empty strong{font:700 clamp(16px,2.2vh,19px)/1.2 var(--font-display);color:var(--slate-900)}
+.review-empty span{font:500 clamp(13px,1.8vh,15px)/1.45 var(--font-body);color:var(--slate-600)}
+
+.star-btn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;background:none;border:0;border-radius:3px;cursor:pointer}
+.star-btn:hover{background:var(--amber-50)}
+
+/* narrow = width < 900 */
+.about-narrow-only{display:none}
+@media (max-width:899.98px){
+  .about-wide-only{display:none !important}
+  .about-narrow-only{display:flex}
+  .about-banner{top:calc(4% + 42px)}
+  .about-string{top:-28px;height:48px}
+  .about-mike{left:18%;height:46%}
+  .about-post{bottom:12%}
+}

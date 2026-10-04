@@ -1,0 +1,92 @@
+/* Mike's Models design tokens — copied from the design system (tokens/*.css). */
+:root{
+/* Blue — "Models" blue from the logo. Primary. */
+--blue-50:#EEF4FF;--blue-100:#D9E6FD;--blue-200:#B3CDFB;--blue-300:#7FA9F6;--blue-400:#4A88F1;--blue-500:#1F6FEB;--blue-600:#0B5AD6;--blue-700:#0A48AB;--blue-800:#0C3A85;--blue-900:#0E2F66;
+/* Cyan — "Mike's" cyan from the logo. Secondary / highlight. */
+--cyan-50:#E6F9FF;--cyan-100:#C4F1FF;--cyan-200:#8AE3FF;--cyan-300:#45D4FF;--cyan-400:#01CBFE;--cyan-500:#00ACE0;--cyan-600:#0089B8;--cyan-700:#006B90;
+/* Amber — the hot-end nozzle. Small accent only (sale, "hot", focus sparks). */
+--amber-50:#FEF7EA;--amber-100:#FDECCC;--amber-300:#F4C274;--amber-400:#E8A132;--amber-500:#D98B16;--amber-600:#B06F0C;--amber-700:#8A560A;
+/* Slate — the printer frame. Ink + neutrals. */
+--slate-0:#FFFFFF;--slate-25:#FBFBFC;--slate-50:#F6F7F9;--slate-100:#ECEEF2;--slate-200:#DCDFE6;--slate-300:#C2C7D1;--slate-400:#9199A8;--slate-500:#687082;--slate-600:#4B5263;--slate-700:#39404F;--slate-800:#2A2F3A;--slate-900:#1B1F27;
+/* Semantic bases */
+--green-50:#E9F8EF;--green-500:#12A150;--green-700:#0B7A3B;
+--red-50:#FDECEF;--red-500:#E0364F;--red-700:#B21F37;
+
+/* ---- Semantic aliases ---- */
+--brand-primary:var(--blue-500);--brand-primary-hover:var(--blue-600);--brand-primary-press:var(--blue-700);
+--brand-secondary:var(--cyan-400);--brand-accent:var(--amber-400);--brand-ink:var(--slate-700);
+
+--text-strong:var(--slate-900);--text-body:var(--slate-700);--text-muted:var(--slate-500);--text-subtle:var(--slate-400);
+--text-on-primary:#FFFFFF;--text-on-ink:#FFFFFF;--text-link:var(--blue-600);--text-link-hover:var(--blue-800);
+
+--surface-page:var(--slate-0);--surface-sunken:var(--slate-50);--surface-card:var(--slate-0);--surface-muted:var(--slate-100);
+--surface-ink:var(--slate-800);--surface-brand:var(--blue-500);--surface-brand-soft:var(--blue-50);--surface-highlight:var(--cyan-50);
+
+--border-subtle:var(--slate-100);--border-default:var(--slate-200);--border-strong:var(--slate-300);--border-ink:var(--slate-700);--border-focus:var(--blue-500);
+
+--status-success:var(--green-500);--status-success-bg:var(--green-50);--status-success-fg:var(--green-700);
+--status-warning:var(--amber-500);--status-warning-bg:var(--amber-50);--status-warning-fg:var(--amber-700);
+--status-danger:var(--red-500);--status-danger-bg:var(--red-50);--status-danger-fg:var(--red-700);
+--status-info:var(--blue-500);--status-info-bg:var(--blue-50);--status-info-fg:var(--blue-700);
+}
+
+:root{
+--font-display:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;
+--font-body:"Manrope",ui-sans-serif,system-ui,sans-serif;
+--font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+
+--fw-regular:400;--fw-medium:500;--fw-semibold:600;--fw-bold:700;--fw-extrabold:800;
+
+--fs-12:12px;--fs-13:13px;--fs-14:14px;--fs-16:16px;--fs-18:18px;--fs-20:20px;--fs-24:24px;--fs-32:32px;--fs-40:40px;--fs-56:56px;--fs-72:72px;
+
+--lh-tight:1.05;--lh-snug:1.2;--lh-normal:1.5;--lh-relaxed:1.65;
+--ls-display:-0.025em;--ls-heading:-0.015em;--ls-body:0;--ls-label:0.06em;
+
+/* Semantic type roles */
+--type-display-xl:700 var(--fs-72)/var(--lh-tight) var(--font-display);
+--type-display:700 var(--fs-56)/var(--lh-tight) var(--font-display);
+--type-h1:700 var(--fs-40)/var(--lh-snug) var(--font-display);
+--type-h2:700 var(--fs-32)/var(--lh-snug) var(--font-display);
+--type-h3:600 var(--fs-24)/var(--lh-snug) var(--font-display);
+--type-h4:600 var(--fs-20)/var(--lh-snug) var(--font-display);
+--type-body-lg:400 var(--fs-18)/var(--lh-relaxed) var(--font-body);
+--type-body:400 var(--fs-16)/var(--lh-normal) var(--font-body);
+--type-body-sm:400 var(--fs-14)/var(--lh-normal) var(--font-body);
+--type-caption:500 var(--fs-13)/var(--lh-normal) var(--font-body);
+--type-label:700 var(--fs-12)/1 var(--font-display);
+--type-price:700 var(--fs-20)/1 var(--font-display);
+}
+
+:root{
+--space-0:0;--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;--space-10:40px;--space-12:48px;--space-16:64px;--space-20:80px;--space-24:96px;--space-32:128px;
+--container-max:1240px;--container-narrow:760px;--gutter:24px;--header-h:68px;
+--control-h-sm:32px;--control-h-md:40px;--control-h-lg:48px;
+}
+
+:root{
+--radius-0:0;--radius-xs:2px;--radius-sm:3px;--radius-md:4px;--radius-pill:999px;
+--radius-control:var(--radius-sm);--radius-card:var(--radius-md);
+
+--border-w:1px;--border-w-strong:2px;
+
+/* Hard "printed" offset shadows (ink-coloured, no blur) — signature */
+--shadow-hard-sm:2px 2px 0 var(--slate-700);
+--shadow-hard:4px 4px 0 var(--slate-700);
+--shadow-hard-brand:4px 4px 0 var(--blue-700);
+/* Soft elevation — overlays only */
+--shadow-1:0 1px 2px rgba(27,31,39,.06),0 1px 1px rgba(27,31,39,.04);
+--shadow-2:0 4px 12px rgba(27,31,39,.08),0 1px 3px rgba(27,31,39,.06);
+--shadow-3:0 16px 40px rgba(27,31,39,.16),0 2px 6px rgba(27,31,39,.08);
+--focus-ring:0 0 0 2px #FFFFFF,0 0 0 4px var(--blue-500);
+
+/* Layer-line texture (echoes the printed letters in the logo) */
+--texture-layers:repeating-linear-gradient(0deg,rgba(57,64,79,.055) 0 1px,transparent 1px 5px);
+--texture-layers-strong:repeating-linear-gradient(0deg,rgba(57,64,79,.1) 0 1px,transparent 1px 4px);
+--texture-grid:linear-gradient(rgba(31,111,235,.08) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,rgba(31,111,235,.08) 1px,transparent 1px) 0 0/24px 24px;
+}
+
+:root{
+--dur-fast:120ms;--dur-base:200ms;--dur-slow:320ms;
+--ease-out:cubic-bezier(.2,.8,.2,1);--ease-in-out:cubic-bezier(.65,0,.35,1);--ease-snap:cubic-bezier(.3,1.4,.5,1);
+}
+

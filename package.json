@@ -1,0 +1,22 @@
+{
+  "name": "mikes-models-site",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "images": "node scripts/optimize-images.mjs"
+  },
+  "devDependencies": {
+    "@types/html-minifier-terser": "^7.0.2",
+    "@types/node": "^26.6.4",
+    "html-minifier-terser": "^7.2.0",
+    "lightningcss": "^1.33.0",
+    "lucide-static": "^1.49.0",
+    "sharp": "^0.35.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2"
+  }
+}

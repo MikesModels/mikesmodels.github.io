@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<x-include src="head" title="Custom design — Mike's Models" description="Get a custom 3D design from Mike. Know exactly what you want, or bring a problem and we'll work out the solution together." theme="#0C3A85"></x-include>
+<script type="module" src="/src/pages/custom-design.ts"></script>
+</head>
+<body>
+<main class="scene cd">
+  <div aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:64%;background-color:#0C3A85;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.13) 1px,transparent 1px);background-size:24px 24px,24px 24px,120px 120px,120px 120px;background-position:center top;"></div>
+  <svg aria-hidden="true" viewBox="0 0 1600 580" preserveAspectRatio="xMidYMid slice" style="position:absolute;left:0;top:0;width:100%;height:64%;" fill="none" stroke="#FFFFFF">
+    <g opacity=".26">
+      <circle cx="250" cy="300" r="150" stroke-width="24" stroke-dasharray="20 19.27"></circle>
+      <circle cx="250" cy="300" r="128" stroke-width="2"></circle>
+      <circle cx="250" cy="300" r="46" stroke-width="2"></circle>
+      <rect x="240" y="248" width="20" height="10" stroke-width="2"></rect>
+      <path d="M60 300 H440 M250 110 V490" stroke-width="1.5" stroke-dasharray="18 5 3 5"></path>
+      <path d="M88 470 H412 M88 462 V478 M412 462 V478" stroke-width="1.5"></path>
+      <path d="M88 470 L100 465 L100 475 Z M412 470 L400 465 L400 475 Z" fill="#FFFFFF" stroke="none"></path>
+      <text x="250" y="496" text-anchor="middle" fill="#FFFFFF" stroke="none" style="font:600 16px var(--font-display);letter-spacing:.08em;">Ø 300</text>
+    </g>
+    <g opacity=".26">
+      <path d="M1180 170 H1460 V230 H1250 V420 H1180 Z" stroke-width="2.5" stroke-linejoin="round"></path>
+      <circle cx="1215" cy="380" r="14" stroke-width="2"></circle>
+      <circle cx="1215" cy="220" r="14" stroke-width="2"></circle>
+      <circle cx="1420" cy="200" r="14" stroke-width="2"></circle>
+      <path d="M1180 140 H1460 M1180 132 V148 M1460 132 V148" stroke-width="1.5"></path>
+      <text x="1320" y="128" text-anchor="middle" fill="#FFFFFF" stroke="none" style="font:600 16px var(--font-display);letter-spacing:.08em;">280</text>
+      <path d="M1500 170 V230 M1492 170 H1508 M1492 230 H1508" stroke-width="1.5"></path>
+      <text x="1530" y="206" fill="#FFFFFF" stroke="none" style="font:600 16px var(--font-display);letter-spacing:.08em;">60</text>
+      <path d="M1150 170 V420 M1142 420 H1158" stroke-width="1.5"></path>
+      <text x="1110" y="300" fill="#FFFFFF" stroke="none" style="font:600 16px var(--font-display);letter-spacing:.08em;">250</text>
+      <text x="1180" y="470" fill="#FFFFFF" stroke="none" style="font:600 14px var(--font-display);letter-spacing:.14em;">BRACKET · PETG · 40% INFILL</text>
+    </g>
+  </svg>
+  <div aria-hidden="true" style="position:absolute;left:0;right:0;top:64%;height:12px;background:#0A2E6E;border-top:2px solid rgba(255,255,255,.28);"></div>
+  <svg aria-hidden="true" viewBox="0 0 1600 400" preserveAspectRatio="none" style="position:absolute;left:0;top:calc(64% + 12px);width:100%;bottom:0;height:calc(36% - 12px);" stroke="rgba(255,255,255,.12)" stroke-width="1.5" fill="none">
+    <path d="M800 0 L-800 400 M800 0 L-300 400 M800 0 L200 400 M800 0 L600 400 M800 0 L1000 400 M800 0 L1400 400 M800 0 L1900 400 M800 0 L2400 400" vector-effect="non-scaling-stroke" transform="translate(0 -0)"></path>
+    <path d="M0 30 H1600 M0 80 H1600 M0 150 H1600 M0 250 H1600" vector-effect="non-scaling-stroke"></path>
+  </svg>
+
+  <x-include src="back-link"></x-include>
+
+  <header class="cd-title">
+    <div class="cd-title-main">
+      <span class="cd-label">TITLE</span>
+      <h1>Custom design</h1>
+    </div>
+    <div class="cd-title-cell" style="border-right:2px solid #FFFFFF;">
+      <span class="cd-label">DRAWN BY</span>
+      <span class="cd-value">Mike</span>
+    </div>
+    <div class="cd-title-cell">
+      <span class="cd-label">SCALE</span>
+      <span class="cd-value">1:1</span>
+    </div>
+  </header>
+
+  <div aria-hidden="true" class="cd-mike">
+    <x-include src="mike" full wave></x-include>
+  </div>
+  <div role="status" aria-live="polite" class="bubble cd-bubble">
+    <strong class="bubble-title" data-msg-title>Two ways to start.</strong>
+    <span class="bubble-body" data-msg-body>Pick the desk that fits. Either way, I'll take it from here.</span>
+    <div aria-hidden="true" class="cd-bubble-tail"></div>
+  </div>
+
+  <x-include src="desk" pos="left:3%;" key="make" icon="pencil-ruler" q="Know exactly what you’re looking for?" a="Let’s make it!"></x-include>
+  <x-include src="desk" pos="right:3%;" flip key="solve" icon="lightbulb" q="Need help solving a problem?" a="Let’s build your solution together!"></x-include>
+</main>
+</body>
+</html>

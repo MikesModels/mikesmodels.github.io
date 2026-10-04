@@ -1,0 +1,99 @@
+@import './fonts.css';
+@import './tokens.css';
+
+/* ---- Base (design system tokens/base.css) ---- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+html,body{margin:0;padding:0;height:100%}
+body{font:var(--type-body);color:var(--text-body);background:var(--page-bg,#9DBEF5);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,h5{font-family:var(--font-display);color:var(--text-strong);letter-spacing:var(--ls-heading);margin:0;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
+a{color:var(--text-link);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{color:var(--text-link-hover);text-decoration-thickness:2px}
+::selection{background:var(--cyan-200);color:var(--slate-900)}
+:focus-visible{outline:none;box-shadow:var(--focus-ring)}
+button,input,select,textarea{font:inherit}
+[hidden]{display:none !important}
+.icon{display:inline-block;flex:none}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* ---- Scene page shell ---- */
+.scene{position:relative;width:100%;overflow:hidden;font-family:var(--font-body)}
+
+/* ---- "Back to booth" link ---- */
+.site-nav{position:absolute;top:clamp(14px,2.4vh,24px);left:clamp(14px,2vw,28px);z-index:20;display:flex}
+.back-link{display:flex;align-items:center;gap:10px;min-height:44px;padding:4px 16px 4px 12px;background:#FFFFFF;color:var(--slate-900);border:2px solid var(--slate-700);border-radius:4px;box-shadow:3px 3px 0 #2A2F3A;font:600 15px/1 var(--font-display);text-decoration:none;white-space:nowrap;transition:transform 200ms var(--ease-out),box-shadow 200ms var(--ease-out)}
+.back-link:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 #2A2F3A;color:var(--slate-900)}
+.back-link:active{transform:translateY(1px);box-shadow:none}
+.back-link:focus-visible{box-shadow:var(--focus-ring)}
+.back-link img{display:block;height:clamp(30px,4.4vh,42px);width:auto}
+.back-link .divider{align-self:stretch;width:1px;margin:4px 0;background:var(--slate-200)}
+
+/* ---- Printed sign card (nav signs, desks, contact + reviews) ---- */
+.sign{position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;background:#FFFFFF;color:var(--slate-900);border:2px solid var(--slate-700);border-radius:4px;box-shadow:1px 1px 0 #2A2F3A,2px 2px 0 #2A2F3A,3px 3px 0 #2A2F3A,4px 4px 0 #2A2F3A,5px 5px 0 #2A2F3A;text-decoration:none;outline:none;transition:transform 200ms var(--ease-out),box-shadow 200ms var(--ease-out)}
+a.sign{cursor:pointer}
+a.sign:hover{transform:translate(-2px,-4px);color:var(--slate-900);box-shadow:1px 1px 0 #2A2F3A,2px 2px 0 #2A2F3A,3px 3px 0 #2A2F3A,4px 4px 0 #2A2F3A,5px 5px 0 #2A2F3A,10px 12px 0 var(--sign-lift,rgba(0,0,0,.22))}
+a.sign:focus-visible{box-shadow:0 0 0 2px #FFFFFF,0 0 0 5px var(--blue-500),5px 5px 0 5px #2A2F3A}
+a.sign:active{transform:translateY(1px)}
+.sign-tile{display:flex;align-items:center;justify-content:center;background:var(--blue-50);color:var(--blue-500);border-radius:3px}
+
+/* The post, cap and printed base under every sign */
+.stand-legs{position:relative;z-index:1;margin-top:-16px;transform:translateX(2.5px);width:30%;height:var(--legs-h,clamp(22px,4vh,38px));display:flex;justify-content:space-between}
+.stand-legs span{width:8px;background:linear-gradient(90deg,#687082 0 40%,#39404F 40%)}
+.stand-cap{position:relative;z-index:1;transform:translateX(2.5px);width:54%;height:7px;background:#C2C7D1;clip-path:polygon(6% 0,94% 0,100% 100%,0 100%)}
+.stand-base{position:relative;z-index:1;transform:translateX(1px);width:54%;height:18px;background-color:#FFFFFF;background-image:var(--texture-layers-strong);border:2px solid var(--slate-700);border-radius:1px 1px 2px 2px;box-shadow:3px 3px 0 #2A2F3A}
+.stand-shadow{position:absolute;left:20%;right:16%;bottom:-6px;height:10px;border-radius:50%;background:var(--stand-shadow,rgba(0,0,0,.3));filter:blur(4px)}
+
+/* ---- Speech bubble ---- */
+.bubble{background:#FFFFFF;border:2px solid var(--slate-700);border-radius:4px;box-shadow:var(--shadow-hard);display:flex;flex-direction:column}
+.bubble-title{font:700 clamp(17px,2.2vh,21px)/1.15 var(--font-display);letter-spacing:var(--ls-heading);color:var(--slate-900);text-wrap:balance}
+.bubble-body{font:500 clamp(13px,1.7vh,15px)/1.45 var(--font-body);color:var(--slate-700);text-wrap:balance}
+
+/* ---- Buttons (design system Button: primary / secondary, sm / md) ---- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h-md);padding:0 16px;font:600 15px/1 var(--font-display);letter-spacing:-.005em;white-space:nowrap;border:2px solid transparent;border-radius:var(--radius-control);text-decoration:none;cursor:pointer;outline:none;transition:transform var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out),background-color var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+.btn--sm{gap:6px;height:var(--control-h-sm);padding:0 12px;font-size:14px}
+.btn--primary{background:var(--blue-500);color:#FFFFFF}
+.btn--primary:hover{background:var(--blue-600);color:#FFFFFF;transform:translate(-2px,-2px);box-shadow:2px 2px 0 var(--blue-800)}
+.btn--primary:active{background:var(--blue-700);transform:translateY(1px);box-shadow:none}
+.btn--secondary{background:var(--surface-card);color:var(--text-strong);border-color:var(--border-ink)}
+.btn--secondary:hover{color:var(--text-strong);transform:translate(-2px,-2px);box-shadow:2px 2px 0 var(--slate-700)}
+.btn--secondary:active{transform:translateY(1px);box-shadow:none}
+.btn:focus-visible{box-shadow:var(--focus-ring)}
+
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;flex:none;width:32px;height:32px;padding:0;border:0;border-radius:var(--radius-control);background:transparent;color:var(--text-strong);cursor:pointer;transition:background-color var(--dur-fast) var(--ease-out)}
+.icon-btn:hover{background:var(--blue-50)}
+.icon-btn:active{background:var(--blue-100)}
+
+/* ---- Form fields (design system Input / Select / Textarea) ---- */
+.field{display:flex;flex-direction:column;min-width:0}
+.field label{display:block;font:600 14px/1.3 var(--font-body);color:var(--text-strong);margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-control);outline:none;background:var(--surface-card);font:500 15px var(--font-body);color:var(--text-strong);transition:border-color var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out)}
+.field input,.field select{height:40px;padding:0 12px}
+.field select{appearance:none;-webkit-appearance:none;padding-right:36px;cursor:pointer}
+.field textarea{resize:vertical;padding:10px 12px;line-height:1.5}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue-500);box-shadow:0 0 0 3px rgba(31,111,235,.18)}
+.field .select-wrap{position:relative}
+.field .select-wrap .icon{position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text-muted)}
+
+/* ---- Dialog (design system Dialog on native <dialog>) ---- */
+.dialog{width:calc(100% - 40px);max-width:460px;max-height:calc(100vh - 40px);padding:0;overflow:auto;background:var(--surface-card);color:var(--text-body);border:2px solid var(--border-ink);border-radius:var(--radius-md);box-shadow:6px 6px 0 var(--slate-700)}
+.dialog::backdrop{background:rgba(27,31,39,.48);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.dialog[open]{animation:dialog-in var(--dur-slow) var(--ease-out)}
+@keyframes dialog-in{from{opacity:0;transform:translateY(8px)}}
+.dialog-head{display:flex;align-items:flex-start;gap:12px;padding:20px 20px 0 24px}
+.dialog-head > div{flex:1;padding-top:6px}
+.dialog-head h2{font:var(--type-h4);color:var(--text-strong)}
+.dialog-head p{margin:6px 0 0;font:var(--type-body-sm);color:var(--text-muted)}
+.dialog-body{padding:16px 24px 24px}
+
+/* ---- Image placeholder (empty photo slot, styled like the design's image slots) ---- */
+.ph{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;overflow:hidden;background:rgba(127,127,127,.08);color:var(--text-body);border-radius:4px;text-align:center;font:500 13px/1.45 var(--font-body);letter-spacing:.01em}
+.ph::after{content:"";position:absolute;inset:0;border:1.5px dashed currentColor;border-radius:inherit;opacity:.35;pointer-events:none}
+.ph svg{flex:none;opacity:.45}
+.ph span{max-width:90%;opacity:.75}
+.ph--circle{border-radius:50%}
+.prop-img{display:block;width:100%;height:100%;object-fit:contain}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;scroll-behavior:auto !important}
+}

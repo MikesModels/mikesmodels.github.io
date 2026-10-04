@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<x-include src="head" title="About Mike — Mike's Models" description="Meet Mike: over 5 years of 3D modelling and over 3 years of 3D printing. Get in touch, read reviews or leave one." theme="#8FB6F4"></x-include>
+<script type="module" src="/src/pages/about.ts"></script>
+</head>
+<body>
+<main class="scene about">
+  <x-include src="backdrop"></x-include>
+
+  <header class="about-banner">
+    <div data-anim="banner" style="position:relative;padding-top:16px;transform-origin:50% 0;">
+      <div aria-hidden="true" class="about-string" style="left:14%;"></div>
+      <div aria-hidden="true" class="about-string" style="right:14%;"></div>
+      <div style="padding:clamp(8px,1.4vh,14px) clamp(22px,2.6vw,40px);background:#FFFFFF;border-radius:2px;box-shadow:0 6px 0 rgba(27,31,39,.14);">
+        <h1 style="margin:0;font:700 clamp(24px,3vw,40px)/1 var(--font-display);letter-spacing:var(--ls-display);color:var(--slate-900);white-space:nowrap;">Meet Mike</h1>
+      </div>
+    </div>
+  </header>
+  <x-include src="back-link"></x-include>
+
+  <!-- Table with cloth (identical to Home booth table) -->
+  <div aria-hidden="true" style="position:absolute;left:38%;right:2%;top:64%;bottom:3%;z-index:3;">
+    <x-include src="table"></x-include>
+  </div>
+
+  <!-- Speech bubbles (wide) -->
+  <div data-stack class="about-stack about-wide-only">
+    <div class="bubble about-say">
+      <strong>I've been at this a while.</strong>
+      <span>Over 5 years of 3D modeling across multiple modeling programs, and over 3 years of 3D printing.</span>
+      <svg aria-hidden="true" style="position:absolute;left:-40px;bottom:12px;width:44px;height:34px;overflow:visible;"><polygon points="43,6 2,32 43,24" fill="#FFFFFF"></polygon><path d="M40 6 L2 32 L40 24" fill="none" stroke="#39404F" stroke-width="2" stroke-linejoin="round"></path></svg>
+    </div>
+    <div class="bubble about-say">
+      <strong>Why Mike's Models?</strong>
+      <span>I wanted to use my knowledge and skills to help people bring their visions to life.</span>
+      <svg aria-hidden="true" style="position:absolute;left:-40px;top:12px;width:44px;height:34px;overflow:visible;"><polygon points="43,10 2,-6 43,28" fill="#FFFFFF"></polygon><path d="M40 10 L2 -6 L40 28" fill="none" stroke="#39404F" stroke-width="2" stroke-linejoin="round"></path></svg>
+    </div>
+    <div data-compact-contact class="bubble about-contact-card" hidden>
+      <span class="sign-tile" style="width:40px;height:40px;flex:none;"><x-icon name="mail" size="22"></x-icon></span>
+      <div style="display:flex;flex-direction:column;gap:4px;min-width:0;">
+        <strong>To contact</strong>
+        <a href="mailto:mikes3dmodels@gmail.com">mikes3dmodels@gmail.com</a>
+      </div>
+    </div>
+  </div>
+
+  <div aria-hidden="true" class="about-mike">
+    <x-include src="mike" full rest></x-include>
+  </div>
+
+  <!-- Speech bubbles (narrow) -->
+  <div data-stack class="about-stack-narrow about-narrow-only">
+    <div class="bubble about-say">
+      <strong>I've been at this a while.</strong>
+      <span>Over 5 years of 3D modeling across multiple modeling programs, and over 3 years of 3D printing.</span>
+    </div>
+    <div class="bubble about-say">
+      <strong>Why Mike's Models?</strong>
+      <span>I wanted to use my knowledge and skills to help people bring their visions to life.</span>
+    </div>
+    <div class="bubble about-contact-card">
+      <span class="sign-tile" style="width:40px;height:40px;flex:none;"><x-icon name="mail" size="22"></x-icon></span>
+      <div style="display:flex;flex-direction:column;gap:4px;min-width:0;">
+        <strong>To contact</strong>
+        <a href="mailto:mikes3dmodels@gmail.com">mikes3dmodels@gmail.com</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact sign -->
+  <section data-contact aria-labelledby="contact-h" class="about-post about-wide-only">
+    <div class="sign about-contact-sign">
+      <span class="sign-tile about-tile"><x-icon name="mail" size="26"></x-icon></span>
+      <h2 id="contact-h" class="about-h2">To contact</h2>
+      <span aria-hidden="true" style="align-self:stretch;height:1px;background:var(--slate-200);"></span>
+      <a href="mailto:mikes3dmodels@gmail.com" class="about-email">mikes3dmodels@gmail.com</a>
+    </div>
+    <x-include src="sign-stand"></x-include>
+  </section>
+
+  <!-- Reviews sign -->
+  <section data-reviews aria-labelledby="reviews-h" class="about-post">
+    <div data-reviews-board class="sign about-reviews">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="sign-tile about-tile"><x-icon name="star" size="26"></x-icon></span>
+          <h2 id="reviews-h" class="about-h2">Reviews</h2>
+        </div>
+        <button type="button" class="btn btn--primary btn--sm" data-open-form><x-icon name="pencil" size="16"></x-icon>Leave a review</button>
+      </div>
+      <span aria-hidden="true" style="align-self:stretch;height:1px;flex:none;background:var(--slate-200);"></span>
+      <div style="flex:1;min-height:0;display:flex;gap:10px;">
+        <div data-list role="list" aria-label="Customer reviews" tabindex="0" class="about-list"></div>
+        <div data-track aria-hidden="true" class="about-track" hidden><div data-thumb class="about-thumb"></div></div>
+      </div>
+    </div>
+    <x-include src="sign-stand"></x-include>
+  </section>
+</main>
+
+<dialog class="dialog" data-dialog aria-labelledby="review-h">
+  <div class="dialog-head">
+    <div>
+      <h2 id="review-h">Leave a review</h2>
+      <p>Takes a minute, and it helps the next person decide.</p>
+    </div>
+    <button type="button" class="icon-btn" data-close aria-label="Close"><x-icon name="x" size="16"></x-icon></button>
+  </div>
+  <div class="dialog-body">
+    <form data-form novalidate style="display:flex;flex-direction:column;gap:14px;">
+      <div class="field">
+        <label for="rv-name">Your name</label>
+        <input id="rv-name" name="name" maxlength="40" placeholder="e.g. Priya S." autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="rv-product">What did you buy?</label>
+        <div class="select-wrap">
+          <select id="rv-product" name="product"><option value="">Pick a product</option></select>
+          <x-icon name="chevron-down" size="18"></x-icon>
+        </div>
+      </div>
+      <div role="group" aria-labelledby="rv-rating-l" style="display:flex;flex-direction:column;gap:6px;">
+        <span id="rv-rating-l" style="font:600 13px/1.2 var(--font-display);color:var(--slate-700);">Your rating</span>
+        <div style="display:flex;align-items:center;gap:2px;">
+          <span data-stars style="display:flex;gap:2px;"></span>
+          <span data-rating-text style="margin-left:8px;font:600 14px/1 var(--font-display);font-variant-numeric:tabular-nums;color:var(--slate-600);">0 of 5</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="rv-comment">Quick comment</label>
+        <textarea id="rv-comment" name="comment" rows="3" maxlength="200" placeholder="What did you like? What could be better?"></textarea>
+      </div>
+      <p data-err role="alert" style="margin:0;font:500 13px/1.4 var(--font-body);color:var(--red-700);" hidden></p>
+      <p style="margin:0;font:500 13px/1.45 var(--font-body);color:var(--text-muted);">Posting opens your email app with the review ready to send. I read every one before it goes up.</p>
+      <div style="display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;">
+        <button type="button" class="btn btn--secondary" data-close>Cancel</button>
+        <button type="submit" class="btn btn--primary"><x-icon name="send" size="18"></x-icon>Post my review</button>
+      </div>
+    </form>
+    <div data-thanks hidden style="display:flex;flex-direction:column;gap:14px;">
+      <p style="margin:0;font:500 15px/1.55 var(--font-body);color:var(--slate-700);">Thanks! Your email app should have opened with the review filled in. Hit send and I'll add it to the board once I've read it.</p>
+      <p style="margin:0;font:500 13px/1.45 var(--font-body);color:var(--text-muted);">Nothing opened? Email it to <a href="mailto:mikes3dmodels@gmail.com">mikes3dmodels@gmail.com</a>.</p>
+      <div style="display:flex;justify-content:flex-end;">
+        <button type="button" class="btn btn--primary" data-close>Done</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+</body>
+</html>
