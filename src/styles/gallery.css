@@ -10,8 +10,6 @@
 .g-focus{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity 800ms var(--ease-out);cursor:zoom-out}
 .is-open .g-focus{opacity:1;pointer-events:auto}
 
-.g-end-cta{position:relative;display:flex;align-items:center;gap:12px;height:72px;padding:0 34px;background:var(--blue-500);color:#FFFFFF;border-radius:3px;font:700 28px/1 var(--font-display);text-decoration:none;box-shadow:5px 5px 0 #2A2F3A}
-.g-end-cta:hover{background:var(--blue-600);color:#FFFFFF}
 
 /* Title plate + walk controls fade out during a close-up */
 .g-ctrl{transition:opacity 240ms var(--ease-out)}

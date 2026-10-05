@@ -2,6 +2,9 @@
 // the floor is at y = 330, the camera sits at the origin looking down -z (perspective 1000px).
 // Desks are boxes with illustrated faces; small props are flat "billboard" planes facing the camera.
 
+import MARBLE from '../assets/img/marble-white.webp';
+import CARPET from '../assets/img/carpet-pile.webp';
+
 const at = (x: number, y: number, z: number, ry = 0) => `translate3d(${x}px,${y}px,${z}px)${ry ? ` rotateY(${ry}deg)` : ''}`;
 /** A flat face, centred on its own middle. */
 const P = (w: number, h: number, t: string, style: string, inner = '', attrs = '') =>
@@ -130,12 +133,6 @@ const BLUEPRINT_SHEET = svg(130, 96, `<rect width="130" height="96" fill="#0C3A8
 
 const CABINET_DOORS = svg(700, 240, `<rect width="700" height="240" fill="#4B5263"/>
   ${[0, 1, 2, 3].map(i => `<rect x="${10 + i * 172}" y="10" width="164" height="220" rx="3" fill="#5B6475" stroke="#39404F" stroke-width="2"/><rect x="${i % 2 ? 22 + i * 172 : 156 + i * 172}" y="96" width="8" height="48" rx="4" fill="#C2C7D1"/>`).join('')}`);
-const BOX_LABEL = (c: string) => svg(96, 70, `<rect x="8" y="10" width="80" height="24" rx="2" fill="${c}"/><rect x="8" y="42" width="56" height="6" rx="2" fill="#C2C7D1"/><rect x="8" y="54" width="40" height="6" rx="2" fill="#C2C7D1"/>`);
-const FLOOR_TAPE = (w: number, d: number, targets: [number, number][]) => svg(w, d, targets.map(([x, y]) => {
-  const sx = w / 2, sy = d - 60, mx = (sx + x) / 2;
-  return `<path d="M${sx} ${sy} C ${sx} ${sy - 260}, ${mx} ${y + 380}, ${x} ${y + 150}" fill="none" stroke="#01CBFE" stroke-width="16" stroke-dasharray="70 40" opacity=".55"/>
-    <path d="M${x - 40} ${y + 190} L${x} ${y + 120} L${x + 40} ${y + 190}" fill="none" stroke="#01CBFE" stroke-width="16" stroke-linejoin="round" opacity=".7"/>`;
-}).join(''));
 const MUG = svg(40, 48, `<rect x="2" y="4" width="30" height="42" rx="4" fill="#FFFFFF" stroke="#C2C7D1"/><rect x="2" y="16" width="30" height="8" fill="#1F6FEB"/><path d="M32 14 q10 0 10 10 q0 10 -10 10" fill="none" stroke="#C2C7D1" stroke-width="4"/>`);
 const PENCIL_CUP = svg(50, 90, `<path d="M14 6 L16 50 M24 2 L24 50 M34 8 L31 50" stroke-width="4" stroke-linecap="round" fill="none" stroke="#E8A132"/><path d="M24 2 l-2 6 h4 z" fill="#39404F"/><rect x="6" y="46" width="38" height="42" rx="4" fill="#39404F"/><rect x="6" y="46" width="38" height="8" fill="#4B5263"/>`);
 
@@ -162,17 +159,6 @@ const WHITEBOARD = svg(820, 380, `<rect width="820" height="380" rx="6" fill="#E
   <g fill="none" stroke="#39404F" stroke-width="2.5" stroke-linecap="round"><path d="M80 230 q40 -50 90 0 t90 0"/><path d="M60 300 h220"/><circle cx="420" cy="260" r="40"/><path d="M420 220 v80 M380 260 h80"/></g>
   <g font-family="Manrope, sans-serif" font-weight="700" font-size="16" fill="#E0364F"><text x="480" y="230">tolerance 0.2 mm</text><text x="480" y="262">PETG for heat</text><text x="480" y="294">infill 15% if load</text></g>
   ${[['#FDECCC', 640, 40, -3], ['#C4F1FF', 700, 120, 4], ['#E9F8EF', 630, 200, -2], ['#FDECEF', 710, 270, 3]].map(([c, x, y, r]) => `<g transform="rotate(${r} ${+x + 40} ${+y + 36})"><rect x="${x}" y="${y}" width="80" height="72" fill="${c}"/><rect x="${+x + 10}" y="${+y + 18}" width="56" height="5" rx="2" fill="rgba(57,64,79,.4)"/><rect x="${+x + 10}" y="${+y + 32}" width="40" height="5" rx="2" fill="rgba(57,64,79,.3)"/></g>`).join('')}`);
-
-const BACK_DRAWINGS = svg(1900, 800, `
-  <g fill="none" stroke="#FFFFFF" opacity=".26">
-    <circle cx="420" cy="420" r="150" stroke-width="24" stroke-dasharray="20 19.27"/><circle cx="420" cy="420" r="128" stroke-width="2"/><circle cx="420" cy="420" r="46" stroke-width="2"/>
-    <path d="M230 420 H610 M420 230 V610" stroke-width="1.5" stroke-dasharray="18 5 3 5"/><path d="M258 590 H582 M258 582 V598 M582 582 V598" stroke-width="1.5"/>
-    <path d="M1300 290 H1580 V350 H1370 V540 H1300 Z" stroke-width="2.5" stroke-linejoin="round"/><circle cx="1335" cy="500" r="14" stroke-width="2"/><circle cx="1335" cy="340" r="14" stroke-width="2"/><circle cx="1540" cy="320" r="14" stroke-width="2"/>
-    <path d="M1300 260 H1580 M1300 252 V268 M1580 252 V268" stroke-width="1.5"/>
-  </g>
-  <g fill="#FFFFFF" opacity=".3" font-family="Space Grotesk, sans-serif" font-weight="600" letter-spacing="2"><text x="420" y="618" font-size="16" text-anchor="middle">Ø 300</text><text x="1440" y="248" font-size="16" text-anchor="middle">280</text><text x="1300" y="590" font-size="14">BRACKET · PETG · 40% INFILL</text></g>
-  <g transform="translate(620 300)"><rect width="180" height="112" fill="#F7F9FC"/><rect x="8" y="8" width="164" height="70" fill="none" stroke="#39404F" stroke-width="1.5"/><path d="M30 60 l30 -30 l40 20 l40 -26" stroke="#1F6FEB" stroke-width="2" fill="none"/><rect x="8" y="86" width="100" height="6" fill="#C2C7D1"/><rect x="8" y="98" width="70" height="6" fill="#C2C7D1"/><circle cx="90" cy="-2" r="6" fill="#E0364F"/></g>
-  <g transform="translate(1690 110)"><rect width="120" height="150" fill="#FFFFFF"/><text x="60" y="34" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="16" fill="#0C3A85">OCT</text><g fill="#C2C7D1">${Array.from({ length: 20 }, (_, i) => `<rect x="${12 + (i % 5) * 20}" y="${48 + Math.floor(i / 5) * 22}" width="14" height="14"/>`).join('')}</g><rect x="72" y="70" width="14" height="14" fill="#01CBFE"/><circle cx="60" cy="-2" r="6" fill="#E8A132"/></g>`);
 
 // ---------------------------------------------------------------- desks
 /** Workshop desk: plywood top on a drawer pedestal + steel legs. `side` mirrors the layout. */
@@ -229,6 +215,62 @@ function solveDesk() {
     standing(250, -96, 150, 240, LAMP(true));
 }
 
+// ---------------------------------------------------------------- studio dressing (matches the gallery's finishes)
+const bpGrid = (w: number, h: number) => `<g stroke="rgba(255,255,255,.10)">${Array.from({ length: Math.floor(w / 20) }, (_, i) => `<path d="M${i * 20} 0 V${h}"/>`).join('')}${Array.from({ length: Math.floor(h / 20) }, (_, i) => `<path d="M0 ${i * 20} H${w}"/>`).join('')}</g><g stroke="rgba(255,255,255,.2)">${Array.from({ length: Math.floor(w / 100) + 1 }, (_, i) => `<path d="M${i * 100} 0 V${h}"/>`).join('')}${Array.from({ length: Math.floor(h / 100) + 1 }, (_, i) => `<path d="M0 ${i * 100} H${w}"/>`).join('')}</g>`;
+const titleBlock = (l1: string, l2: string) => `<g transform="translate(262 246)"><rect width="128" height="46" fill="#0C3A85" stroke="#FFFFFF" stroke-width="1.5"/><path d="M0 22 H128" stroke="#FFFFFF" stroke-width="1"/><text x="8" y="15" font-family="Space Grotesk, sans-serif" font-size="10" font-weight="700" fill="#FFFFFF" letter-spacing="1">${l1}</text><text x="8" y="37" font-family="Space Grotesk, sans-serif" font-size="9" font-weight="600" fill="#45D4FF" letter-spacing="1">${l2}</text></g>`;
+const GEAR_PRINT = svg(400, 300, `<rect width="400" height="300" fill="#0C3A85"/>${bpGrid(400, 300)}
+  <g fill="none" stroke="#FFFFFF">
+    <circle cx="150" cy="140" r="100" stroke-width="16" stroke-dasharray="13.1 13.1" opacity=".9"/><circle cx="150" cy="140" r="86" stroke-width="1.6"/><circle cx="150" cy="140" r="30" stroke-width="1.6"/><rect x="143" y="104" width="14" height="8" stroke-width="1.4"/>
+    <path d="M30 140 H270 M150 20 V260" stroke-width="1" stroke-dasharray="12 4 2 4" opacity=".8"/>
+    <path d="M50 270 H250 M50 264 V276 M250 264 V276" stroke-width="1.2"/>
+  </g>
+  <text x="150" y="266" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF" letter-spacing="1">Ø 60</text>
+  ${titleBlock('SPUR GEAR · 24T', 'PLA · SCALE 2:1')}`);
+const BRACKET_PRINT = svg(400, 300, `<rect width="400" height="300" fill="#0C3A85"/>${bpGrid(400, 300)}
+  <g fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round">
+    <path d="M70 60 H300 V105 H125 V240 H70 Z"/><circle cx="97" cy="210" r="11"/><circle cx="97" cy="95" r="11"/><circle cx="270" cy="82" r="11"/>
+    <path d="M125 105 L170 105 L125 150" stroke-width="1.6"/>
+  </g>
+  <g fill="none" stroke="#FFFFFF" stroke-width="1.2"><path d="M70 40 H300 M70 34 V46 M300 34 V46"/><path d="M320 60 V105 M314 60 H326 M314 105 H326"/><path d="M50 60 V240 M44 240 H56"/></g>
+  <g font-family="Space Grotesk, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF" letter-spacing="1"><text x="185" y="32" text-anchor="middle">120</text><text x="330" y="86">25</text><text x="18" y="154">100</text></g>
+  ${titleBlock('SHELF BRACKET', 'PETG · 40% INFILL')}`);
+const FILAMENT_RACK = svg(240, 430, `<rect width="240" height="430" fill="#39404F"/><rect x="8" y="8" width="224" height="414" fill="#2A2F3A"/>
+  ${[0, 1, 2].map(r => `<rect x="8" y="${136 + r * 136}" width="224" height="10" fill="#9199A8"/>` +
+    ['#01CBFE', '#1F6FEB', '#E8A132', '#FFFFFF', '#E0364F', '#12A150', '#8B5CF6', '#F4C274', '#ECEEF2'].slice(r * 3, r * 3 + 3)
+      .map((c, i) => `<g transform="translate(${46 + i * 74} ${86 + r * 136})"><circle r="34" fill="#1B1F27"/><circle r="30" fill="${c}"/><circle r="26" fill="none" stroke="rgba(255,255,255,.14)"/><circle r="13" fill="#39404F"/><circle r="5" fill="#1B1F27"/></g>`).join('')).join('')}
+  <rect x="8" y="8" width="224" height="414" fill="none" stroke="#4B5263" stroke-width="4"/>`);
+const PLANT = svg(170, 330, `<path d="M85 210 C60 150 40 120 14 112 C34 150 52 190 80 216 Z" fill="#4F9A63" stroke="#2E5E3E" stroke-width="2"/>
+  <path d="M85 210 C110 150 130 120 156 112 C136 150 118 190 90 216 Z" fill="#3F8455" stroke="#2E5E3E" stroke-width="2"/>
+  <path d="M85 212 C70 140 66 80 84 20 C102 80 100 140 88 212 Z" fill="#5CA86F" stroke="#2E5E3E" stroke-width="2"/>
+  <path d="M84 214 C58 176 34 166 8 172 C34 192 58 206 82 218 Z" fill="#6FAE80" stroke="#2E5E3E" stroke-width="2"/>
+  <path d="M86 214 C112 176 136 166 162 172 C136 192 112 206 88 218 Z" fill="#4F9A63" stroke="#2E5E3E" stroke-width="2"/>
+  <path d="M84 216 C76 160 50 70 40 52 C62 90 80 160 88 214 Z" fill="#7CB88C" stroke="#2E5E3E" stroke-width="2"/>
+  <path d="M86 216 C96 160 120 82 132 62 C114 100 96 160 90 214 Z" fill="#5E9E70" stroke="#2E5E3E" stroke-width="2"/>
+  <path d="M38 214 H132 L122 326 H48 Z" fill="#ECEEF2" stroke="#39404F" stroke-width="3" stroke-linejoin="round"/>
+  ${Array.from({ length: 14 }, (_, i) => `<path d="M${39 + i * 0.7} ${222 + i * 7.4} H${131 - i * 0.7}" stroke="#C2C7D1" stroke-width="1"/>`).join('')}
+  <path d="M34 206 H136 V220 H34 Z" fill="#01CBFE" stroke="#39404F" stroke-width="3" stroke-linejoin="round"/>`);
+const PENDANT = svg(120, 70, `<path d="M58 0 H62 V18 H58 Z" fill="#1B1F27"/><path d="M20 58 Q22 22 60 18 Q98 22 100 58 Z" fill="#1B1F27" stroke="#39404F" stroke-width="2"/>
+  <path d="M28 50 Q34 28 60 25" stroke="rgba(255,255,255,.18)" stroke-width="3" fill="none"/><ellipse cx="60" cy="58" rx="40" ry="7" fill="#FFF6DC"/>`);
+
+// Gallery wall finishes: crown moulding, wall-wash lights, chair rail, navy wainscot with brass trim, baseboard.
+const WALL_BG = 'background:repeating-linear-gradient(45deg,rgba(57,64,79,.04) 0 1px,rgba(57,64,79,0) 1px 22px),repeating-linear-gradient(-45deg,rgba(57,64,79,.04) 0 1px,rgba(57,64,79,0) 1px 22px),radial-gradient(circle,rgba(57,64,79,.06) 0 2px,rgba(57,64,79,0) 3px) 0 0/31.1px 31.1px,#C4CBD6;';
+const PANEL = '<div style="flex:1;background:linear-gradient(rgba(255,255,255,.05),rgba(0,0,0,.12)),#0F3470;box-shadow:inset 2px 2px 0 rgba(255,255,255,.16),inset -2px -2px 0 rgba(0,0,0,.4),0 0 0 7px #0C2A5A,0 0 0 8px rgba(232,161,50,.6);"></div>';
+function wallDressing(w: number, washes: number[], panels: number, art: string) {
+  return `<div style="position:absolute;left:0;right:0;top:46px;height:90px;background:linear-gradient(rgba(14,18,26,.26),rgba(14,18,26,0));"></div>
+    ${washes.map(x => `<div style="position:absolute;left:${x - 160}px;top:46px;width:320px;height:540px;background:radial-gradient(ellipse 20% 16% at 50% 0%,rgba(255,252,240,.95),rgba(255,252,240,0)),radial-gradient(ellipse 50% 100% at 50% 0%,rgba(255,243,220,.85) 0%,rgba(255,238,205,.5) 36%,rgba(255,236,200,.18) 60%,rgba(255,236,200,0) 76%);"></div>`).join('')}
+    ${art}
+    <div style="position:absolute;left:0;right:0;top:0;height:46px;background:repeating-linear-gradient(90deg,#F4F6F9 0 10px,#9AA1AD 10px 12px,#D5DAE2 12px 18px) 0 30px/100% 10px no-repeat,linear-gradient(180deg,#9AA1AD 0 5px,#F7F8FA 5px 13px,#C2C7D1 13px 17px,#FFFFFF 17px 24px,#DCDFE6 24px 30px,#DCDFE6 40px);border-bottom:2px solid #687082;box-shadow:0 4px 8px rgba(0,0,0,.24);"></div>
+    <div style="position:absolute;left:0;right:0;top:556px;height:16px;background:linear-gradient(#FFFFFF 0 3px,#DCDFE6 3px 9px,#9AA1AD 9px 11px,#ECEEF2 11px 14px,#687082 14px);box-shadow:0 5px 6px rgba(0,0,0,.3);z-index:1;"></div>
+    <div style="position:absolute;left:0;right:0;top:572px;bottom:40px;background:linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,0) 30px),#0E2F66;display:flex;gap:28px;padding:28px ${Math.round(w * 0.03)}px 26px;box-sizing:border-box;">${PANEL.repeat(panels)}</div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:40px;background:linear-gradient(rgba(232,161,50,.6) 0 1px,#39404F 1px 3px,#1B2536 3px 36px,#0E1320 36px);"></div>`;
+}
+/** A framed print with a brass picture light, placed on a wall at (x, y). */
+const framed = (x: number, y: number, w: number, h: number, art: string) =>
+  `<div style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;padding:12px;box-sizing:border-box;background:linear-gradient(135deg,#39404F,#1B1F27);box-shadow:0 14px 22px rgba(14,18,26,.35),inset 0 0 0 2px #4B5263;">
+    <div style="width:100%;height:100%;padding:14px;box-sizing:border-box;background:#F7F8FA;box-shadow:inset 0 2px 5px rgba(0,0,0,.2);">${art}</div></div>
+   <div style="position:absolute;left:${x + w / 2 - 80}px;top:${y - 30}px;width:160px;height:14px;border-radius:7px;background:linear-gradient(#F0D49A,#B08A4A);box-shadow:0 10px 28px 8px rgba(255,236,200,.5);"></div>`;
+const PILASTER = (side: 'left' | 'right') => `<div style="position:absolute;${side}:0;top:46px;bottom:40px;width:40px;background:repeating-linear-gradient(90deg,rgba(40,46,58,.16) 0 2px,rgba(40,46,58,0) 2px 8px),linear-gradient(90deg,rgba(0,0,0,.1),rgba(255,255,255,.14) 50%,rgba(0,0,0,.14)),url(${MARBLE}) 0 0/260px 260px;box-shadow:${side === 'left' ? '' : '-'}7px 0 9px rgba(14,18,26,.26);z-index:2;"></div>`;
+
 // ---------------------------------------------------------------- room
 const ROOM_W = 1900, ROOM_D = 1500, FRONT = 450, FLOOR = 330, CEIL = -470, H = FLOOR - CEIL;
 const DEPTH = ROOM_D + FRONT, MID_Z = (FRONT - ROOM_D) / 2; // the room runs from z = FRONT (behind the camera) to the back wall
@@ -238,33 +280,44 @@ export const DESKS = {
 } as const;
 
 function room() {
-  const wallBase = 'background-color:#0C3A85;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);background-size:24px 24px,24px 24px,120px 120px,120px 120px;';
-  const sideWall = (x: number, ry: number, art: string) =>
-    P(DEPTH, H, `${at(x, (FLOOR + CEIL) / 2, MID_Z)} rotateY(${ry}deg)`, wallBase + shade(.18),
-      `<div style="position:absolute;left:0;right:0;bottom:0;height:34px;background:linear-gradient(#0A2E6E,#082656);border-top:2px solid rgba(255,255,255,.2)"></div>${art}`);
-  const spools = ['#01CBFE', '#1F6FEB', '#E8A132', '#FFFFFF', '#2A2F3A', '#E0364F', '#12A150', '#8B5CF6'];
+  const sideWall = (x: number, ry: number, washes: number[], art: string) =>
+    P(DEPTH, H, `${at(x, (FLOOR + CEIL) / 2, MID_Z)} rotateY(${ry}deg)`, WALL_BG + shade(.14), wallDressing(DEPTH, washes, 5, art));
+  // Ceiling element: top edge = front (z = FRONT), bottom edge = back wall. Floor element: top edge = back wall.
+  const ceilY = (z: number) => FRONT - z, floorY = (z: number) => z + ROOM_D, ex = (x: number) => x + ROOM_W / 2;
+  const downlight = (x: number, y: number) => `<div style="position:absolute;left:${x - 13}px;top:${y - 13}px;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle,#FFFDF4 0 45%,#FFE7B8 60%,#9AA1AD 64% 78%,#39404F 80%);box-shadow:0 0 26px 10px rgba(255,236,200,.38);"></div>`;
+  const coffers = Array.from({ length: 6 }, (_, c) => Array.from({ length: 6 }, (_, r) =>
+    `<div style="position:absolute;left:${30 + c * 310}px;top:${40 + r * 318}px;width:290px;height:296px;background:linear-gradient(90deg,#1B1F27,#262B35);box-shadow:inset 0 0 0 8px #343A47,inset 0 0 0 9px #151920,inset 0 0 0 17px #2B303B,inset 0 0 0 18px #151920,inset 0 0 34px rgba(0,0,0,.55);"></div>`).join('')).join('');
+  const pendant = (x: number, z: number) =>
+    P(3, 160, at(x, -390, z), 'background:#1B1F27;') +
+    P(120, 70, at(x, -280, z), '', PENDANT) +
+    P(300, 290, at(x, -100, z), 'background:linear-gradient(rgba(255,240,205,.13),rgba(255,240,205,0));clip-path:polygon(38% 0,62% 0,100% 100%,0 100%);');
   return [
-    // floor: epoxy with a printed grid and light pools under the desks
+    // floor: polished concrete with soft light pools, and a navy rug (the gallery's carpet) under the work area
     P(ROOM_W, DEPTH, `${at(0, FLOOR, MID_Z)} rotateX(90deg)`,
-      'background:radial-gradient(ellipse 380px 300px at 22% 62%,rgba(255,236,200,.16),rgba(255,236,200,0)),radial-gradient(ellipse 380px 300px at 78% 62%,rgba(255,236,200,.16),rgba(255,236,200,0)),radial-gradient(ellipse 300px 260px at 50% 40%,rgba(1,203,254,.10),rgba(1,203,254,0)),linear-gradient(rgba(255,255,255,.07) 2px,transparent 2px) 0 0/100px 100px,linear-gradient(90deg,rgba(255,255,255,.07) 2px,transparent 2px) 0 0/100px 100px,linear-gradient(#0A2E6E,#0B3270);',
-      FLOOR_TAPE(ROOM_W, DEPTH, [[ROOM_W / 2 + DESKS.make.x, DESKS.make.z + ROOM_D], [ROOM_W / 2 + DESKS.solve.x, DESKS.solve.z + ROOM_D]])),
-    // ceiling with LED panels
-    P(ROOM_W, DEPTH, `${at(0, CEIL, MID_Z)} rotateX(-90deg)`,
-      'background:#0A1F47;',
-      [480, 950, 1420].map(x => `<div style="position:absolute;left:${x - 50}px;top:120px;width:100px;height:1500px;border-radius:6px;background:linear-gradient(90deg,#DDE9FD,#FFFFFF 50%,#DDE9FD);box-shadow:0 0 40px 12px rgba(221,233,253,.35)"></div>`).join('')),
-    // back wall: blueprint grid, drawings, filament shelf
-    P(ROOM_W, H, at(0, (FLOOR + CEIL) / 2, -ROOM_D), wallBase,
-      `${BACK_DRAWINGS}<div style="position:absolute;left:0;right:0;bottom:0;height:34px;background:linear-gradient(#0A2E6E,#082656);border-top:2px solid rgba(255,255,255,.2)"></div>`),
-    // two wall shelves, clear of Mike: filament spools (left), boxed filament (right)
-    [-1, 1].map(sx => G(at(sx * 560, -250, -ROOM_D + 46), box(560, 16, 92, { front: 'background:#C2C7D1;', top: 'background:#ECEEF2;' }))).join(''),
-    spools.slice(0, 5).map((c, i) => P(92, 92, at(-790 + i * 115, -304, -ROOM_D + 60), '', SPOOL(c))).join(''),
-    [['#FFFFFF', 96, 70], ['#ECEEF2', 96, 70], ['#FFFFFF', 96, 70], ['#D9E6FD', 120, 50]].map(([c, w, h], i) =>
-      G(at(330 + i * 112, -258 - +h / 2, -ROOM_D + 60), box(+w, +h, 70, { front: `background:${c};`, frontInner: BOX_LABEL(spools[i + 3]) }))).join(''),
-    // side walls: pegboard of tools (left), whiteboard + parts shelf (right)
-    sideWall(-ROOM_W / 2, 90, `<div style="position:absolute;left:${300 + FRONT}px;top:150px;width:980px;height:380px">${PEGBOARD}</div>`),
-    sideWall(ROOM_W / 2, -90, `<div style="position:absolute;left:260px;top:140px;width:820px;height:380px">${WHITEBOARD}</div>`),
-    // workbench strip along the left wall
+      'background:radial-gradient(ellipse 380px 300px at 25% 50%,rgba(255,236,200,.22),rgba(255,236,200,0)),radial-gradient(ellipse 380px 300px at 75% 50%,rgba(255,236,200,.22),rgba(255,236,200,0)),radial-gradient(ellipse 700px 500px at 30% 70%,rgba(255,255,255,.05),rgba(255,255,255,0)),radial-gradient(ellipse 600px 420px at 75% 30%,rgba(0,0,0,.08),rgba(0,0,0,0)),linear-gradient(90deg,rgba(255,255,255,.06) 2px,transparent 2px) 0 0/475px 100%,linear-gradient(rgba(255,255,255,.06) 2px,transparent 2px) 0 0/100% 390px,linear-gradient(#59616F,#6B7383);',
+      `<div style="position:absolute;left:${ex(-720)}px;width:1440px;top:${floorY(-1060)}px;height:1300px;box-sizing:border-box;border:30px solid #0E2F66;background:url(${CARPET}) 0 0/152px 152px,radial-gradient(circle,rgba(1,203,254,.3) 0 2.5px,rgba(1,203,254,0) 3.5px) 0 0/40px 40px,repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 1.5px,rgba(255,255,255,0) 1.5px 28.28px),repeating-linear-gradient(-45deg,rgba(255,255,255,.07) 0 1.5px,rgba(255,255,255,0) 1.5px 28.28px),#0A48AB;box-shadow:inset 0 0 0 3px rgba(232,161,50,.75),inset 0 0 0 10px #0C3A85,inset 0 0 0 12px rgba(1,203,254,.7),0 0 10px 4px rgba(0,0,0,.35);"></div>`),
+    // ceiling: coffers, a laylight over Mike, recessed downlights
+    P(ROOM_W, DEPTH, `${at(0, CEIL, MID_Z)} rotateX(-90deg)`, 'background:#262B35;',
+      coffers +
+      `<div style="position:absolute;left:${ex(-180)}px;top:${ceilY(-760)}px;width:360px;height:520px;box-sizing:border-box;border:10px solid #1B1F27;background:repeating-linear-gradient(90deg,rgba(150,128,90,.4) 0 2px,rgba(150,128,90,0) 2px 56.7px),repeating-linear-gradient(0deg,rgba(150,128,90,.4) 0 2px,rgba(150,128,90,0) 2px 56.7px),radial-gradient(ellipse at 50% 50%,#FFFBF0,#FFEACB);box-shadow:0 0 0 3px #4B5263,0 0 80px 26px rgba(255,236,200,.26);"></div>` +
+      [[-470, -260], [470, -260], [-470, -900], [470, -900], [0, -300], [-760, -1250], [760, -1250]].map(([x, z]) => downlight(ex(x), ceilY(z))).join('') +
+      '<div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.4),rgba(0,0,0,0) 6%,rgba(0,0,0,0) 94%,rgba(0,0,0,.4));"></div>'),
+    // back wall: two framed blueprints (clear of Mike), marble pilasters
+    P(ROOM_W, H, at(0, (FLOOR + CEIL) / 2, -ROOM_D), WALL_BG,
+      wallDressing(ROOM_W, [ex(-430), ex(430)], 4,
+        framed(ex(-430) - 215, 130, 430, 330, GEAR_PRINT) + framed(ex(430) - 215, 130, 430, 330, BRACKET_PRINT) + PILASTER('left') + PILASTER('right'))),
+    // side walls: framed pegboard of tools (left), whiteboard (right)
+    sideWall(-ROOM_W / 2, 90, [FRONT + 520, FRONT + 1060],
+      `<div style="position:absolute;left:${300 + FRONT}px;top:110px;width:980px;height:380px;box-shadow:0 12px 20px rgba(14,18,26,.3)">${PEGBOARD}</div>`),
+    sideWall(ROOM_W / 2, -90, [440, 900],
+      `<div style="position:absolute;left:260px;top:110px;width:820px;height:380px;box-shadow:0 12px 20px rgba(14,18,26,.3)">${WHITEBOARD}</div>`),
+    // storage cabinet along the left wall, filament rack and plants in the corners
     G(at(-ROOM_W / 2 + 60, 210, -900), box(120, 240, 700, { front: 'background:#4B5263;', top: PLY_TOP, sideInner: CABINET_DOORS })),
+    G(at(-790, FLOOR - 215, -1430), box(240, 430, 90, { front: 'background:#39404F;', top: 'background:#2A2F3A;', frontInner: FILAMENT_RACK })),
+    P(170, 330, at(800, FLOOR - 165, -1380), '', PLANT),
+    P(150, 291, at(-820, FLOOR - 146, -330), '', PLANT),
+    // pendant lamps over the desks
+    pendant(DESKS.make.x, DESKS.make.z), pendant(DESKS.solve.x, DESKS.solve.z),
   ].join('');
 }
 

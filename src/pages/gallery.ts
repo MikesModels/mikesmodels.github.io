@@ -31,7 +31,6 @@ for (let i = PAIRS; i >= -1; i--) {
   world.insertBefore(tpl.content, end);
 }
 end.style.transform = `translate3d(0px,-70px,${-END_Z}px)`;
-$('[data-next-case]').textContent = String(N + 1);
 $('[data-p="total"]').textContent = pad(N);
 
 const cases: HTMLElement[] = [];
@@ -97,7 +96,7 @@ function render() {
   main.classList.toggle('is-narrow', narrow);
   main.classList.toggle('is-open', isOpen);
   const fx = 800 + (narrow ? 0 : -250), fy = 396 + (narrow ? -170 : 0), rx = narrow ? 300 : 420, ry = narrow ? 380 : 540;
-  focus.style.background = `radial-gradient(ellipse ${rx}px ${ry}px at ${fx}px ${fy}px,rgba(7,9,14,0) 50%,rgba(7,9,14,.8) 100%)`;
+  focus.style.background = `radial-gradient(ellipse ${rx}px ${ry}px at ${fx}px ${fy}px,rgba(7,9,14,0) 50%,rgba(7,9,14,.4) 100%)`; // close-up darkening (halved from .8)
   panel.setAttribute('aria-hidden', String(!isOpen));
   panel.inert = !isOpen;
 }
