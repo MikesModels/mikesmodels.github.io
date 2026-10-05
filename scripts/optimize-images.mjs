@@ -19,9 +19,7 @@ const webp = (from, to, width, opts = {}) =>
 // Home banner logo (white background) — shown 184–368 css px wide.
 webp('logo.png', 'logo-400.webp', 400);
 webp('logo.png', 'logo-800.webp', 800);
-// Transparent logo — "Back to booth" link (≤84 css px wide) and the gallery end wall.
-webp('logo-transparent.png', 'logo-tr-100.webp', 100, { alphaQuality: 90 });
-webp('logo-transparent.png', 'logo-tr-200.webp', 200, { alphaQuality: 90 });
+// Transparent logo — the gallery end wall.
 webp('logo-transparent.png', 'logo-tr-480.webp', 480, { alphaQuality: 90 });
 // Gallery textures.
 webp('floor-marble.jpg', 'floor-marble.webp', undefined, { quality: 78 });

@@ -34,18 +34,35 @@ and `{{root}}` is the relative path back to the site root. Mike is one partial (
 **Gallery items** — edit `src/data/products.ts`. Add a photo by dropping it in `src/assets/products/` and setting
 `image: 'file-name.webp'` on the item. The hallway adapts to however many items there are.
 
-**Reviews** — the review form emails a pre-filled review to mikes3dmodels@gmail.com (GitHub Pages has no server).
-To publish one, add it to `src/data/reviews.json` and rebuild:
+**Table props on the home page** (keychains, display model, flexi dragon, trinkets) are hidden until they have photos.
+In `index.html`, remove `hidden` from the `data-prop="…"` group and replace its `<div class="ph" …>` with
+`<img class="prop-img" src="/src/assets/products/…" alt="…">`.
 
-```json
-[{ "name": "Priya S.", "product": "Flexi dragon", "rating": 5, "comment": "Every joint actually moves." }]
+**Form questions** live in `src/data/form-specs.ts` (`required: true` = red asterisk + blocked until filled).
+If you change which fields are required, change `REQUIRED` in `worker/src/index.ts` to match.
+
+## Forms and reviews
+
+All three forms (Custom design → Make it / Solve it, and About → Leave a review) are filled in on the page and sent to
+the **forms mini-server** in `worker/` (a free Cloudflare Worker). It checks the form again, filters spam
+(Cloudflare Turnstile + a hidden trap field), and emails it to mikes3dmodels@gmail.com through Resend, with photos
+attached and *Reply* going to the customer.
+
+Review emails have an **Approve & publish** button. It opens a confirmation page; pressing **Publish** there adds
+the review to `src/data/reviews.json` in this repo, which redeploys the site (live in about a minute). Ignoring the
+email rejects it. Because the mini-server commits to `main`, **pull before pushing** site changes:
+
+```bash
+git pull --rebase
 ```
 
-**Table props on the home page** (keychains, display model, flexi dragon, trinkets) are placeholders in `index.html`
-(`<div class="ph" …>`). Replace each with `<img class="prop-img" src="/src/assets/…" alt="…">`.
+The site finds the mini-server through `.env.production` (`VITE_FORMS_ENDPOINT`, `VITE_TURNSTILE_SITEKEY` —
+public values, not secrets). Secrets live only in Cloudflare (`npx wrangler secret put NAME` in `worker/`):
+`RESEND_API_KEY`, `APPROVE_SECRET`, `GITHUB_TOKEN` (fine-grained, this repo only, Contents read & write — renew it
+before it expires), `TURNSTILE_SECRET`.
 
-**Custom request** is still the design's placeholder (email link). The real multi-step form needs a form backend;
-GitHub Pages can't receive uploads, so that means a form service or a different host.
+Local testing: `npm run dev` in `worker/` runs it in dev mode (nothing is emailed; `GET /dev/last` shows what
+would have been sent), alongside `npm run dev` here.
 
 ## Publishing
 

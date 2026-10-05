@@ -1,30 +1,84 @@
 :root{--page-bg:#0C3A85}
-.cd{height:100vh;height:100dvh;min-height:600px;background:#0A2E6E}
+.cd{position:relative;width:100%;height:100vh;height:100dvh;min-height:480px;overflow:hidden;background:#071B3F;font-family:var(--font-body)}
 
-/* Title block */
-.cd-title{position:absolute;top:clamp(14px,2.4vh,24px);right:clamp(14px,2vw,28px);z-index:20;display:grid;grid-template-columns:repeat(2,auto);border:2px solid #FFFFFF;background:#0C3A85;color:#FFFFFF}
+/* ---- 3D stage (1600×900, scaled to cover; see design-room.ts for world units) ---- */
+.cd-stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;margin:-450px 0 0 -800px;perspective:1000px;perspective-origin:50% 44%;overflow:hidden;background:#071B3F}
+.cd-world{position:absolute;left:800px;top:450px;width:0;height:0;transform-style:preserve-3d;transition:transform 1100ms cubic-bezier(.45,0,.2,1)}
+.cd-world .g{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d}
+.cd-world .p{position:absolute;overflow:hidden;backface-visibility:hidden}
+.cd-world [data-desk]{cursor:pointer}
+.cd-mike{position:absolute;left:-180px;top:-712px;width:420px;height:720px}
+.cd-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 75% at 50% 46%,rgba(7,9,14,0) 58%,rgba(7,9,14,.45) 100%)}
+.cd-dim{position:absolute;inset:0;background:rgba(7,9,14,.35);opacity:0;pointer-events:none;transition:opacity 700ms var(--ease-out);cursor:zoom-out}
+.is-open .cd-dim{opacity:1;pointer-events:auto}
+
+/* ---- HUD ---- */
+.cd-title{position:absolute;top:clamp(14px,2.4vh,24px);right:clamp(14px,2vw,28px);z-index:20;display:grid;grid-template-columns:repeat(2,auto);border:2px solid #FFFFFF;background:#0C3A85;color:#FFFFFF;transition:opacity 240ms var(--ease-out)}
 .cd-title-main{grid-column:1 / -1;padding:10px 16px 12px;border-bottom:2px solid #FFFFFF;display:flex;flex-direction:column;gap:6px}
 .cd-title h1{margin:0;font:700 clamp(22px,2.4vw,34px)/1 var(--font-display);letter-spacing:var(--ls-display);color:#FFFFFF}
 .cd-title-cell{padding:8px 16px;display:flex;flex-direction:column;gap:4px}
 .cd-label{font:700 10px/1 var(--font-display);letter-spacing:.14em;color:var(--cyan-300)}
 .cd-value{font:600 14px/1 var(--font-display)}
+.is-open .cd-title,.is-open .cd-bubble{opacity:0;pointer-events:none}
 
-/* Mike + bubble */
-.cd-mike{position:absolute;bottom:6%;left:50%;transform:translateX(-43%);height:60%;aspect-ratio:420/720;z-index:3}
-.cd-bubble{position:absolute;z-index:6;left:50%;bottom:calc(60% + 18px);transform:translateX(-50%);width:min(300px,34vw);padding:14px 16px 16px;gap:6px}
+.cd-bubble{position:absolute;z-index:6;left:50%;bottom:60%;transform:translateX(-50%);width:min(300px,34vw);padding:14px 16px 16px;gap:6px;transition:opacity 240ms var(--ease-out)}
 .cd-bubble-tail{position:absolute;left:50%;bottom:-9px;margin-left:-7px;width:14px;height:14px;background:#FFFFFF;border-right:2px solid var(--slate-700);border-bottom:2px solid var(--slate-700);transform:rotate(45deg)}
 
-/* Desks */
-.desk{position:absolute;bottom:5%;width:min(62vh,40vw);aspect-ratio:520/300;z-index:4}
-.desk-sign{position:absolute;left:50%;bottom:93%;transform:translateX(-50%);width:clamp(150px,min(24vw,34vh),320px);display:flex;flex-direction:column;align-items:center}
-.desk-arrow{position:absolute;bottom:calc(100% + 12px);left:50%;margin-left:-22px;width:44px;height:54px}
-.desk .sign{gap:clamp(6px,1.2vh,12px);padding:clamp(12px,2vh,22px) clamp(12px,1.4vw,20px) clamp(14px,2.2vh,22px)}
-.desk .sign-tile{width:clamp(36px,min(3.8vw,5.6vh),56px);height:clamp(36px,min(3.8vw,5.6vh),56px)}
-.desk-q{font:600 clamp(14px,min(1.4vw,2.2vh),19px)/1.25 var(--font-display);color:var(--slate-700);text-align:center;text-wrap:balance;min-height:2.5em;display:flex;align-items:center;justify-content:center}
-.desk-a{font:700 clamp(19px,min(2.1vw,3.3vh),30px)/1.05 var(--font-display);letter-spacing:var(--ls-display);color:var(--blue-600);text-align:center;text-wrap:balance;min-height:3.2em;display:flex;align-items:center;justify-content:center}
+/* ---- The two choices ---- */
+.cd-sign-wrap{position:relative;display:flex;flex-direction:column;align-items:center}
+.cd-arrow{position:absolute;bottom:calc(100% + 10px);left:50%;width:44px;height:54px;margin-left:-22px}
+.cd-arrow > div{width:100%;height:100%}
+.cd-arrow svg{display:block;width:100%;height:100%;overflow:visible}
+.cd-sign{--sign-lift:rgba(0,0,0,.22);gap:12px;padding:20px 18px 22px;text-decoration:none}
+.cd-sign .sign-tile{width:56px;height:56px}
+.cd-sign .sign-tile .icon{width:30px;height:30px}
+.desk-q{font:600 19px/1.25 var(--font-display);color:var(--slate-700);text-align:center;text-wrap:balance}
+.desk-a{font:700 30px/1.05 var(--font-display);letter-spacing:var(--ls-display);color:var(--blue-600);text-align:center;text-wrap:balance}
+
+/* In the scene: a placard clipped to the desk's front edge (sizes are world units). */
+/* The wrapper is tall enough to hold the arrow too: in a 3D scene, content outside an element's box
+   can be drawn behind nearer props. */
+.cd-sign-wrap.in-scene{position:absolute;left:-205px;top:-238px;width:410px;height:366px;justify-content:flex-end}
+.cd-sign-wrap.in-scene .cd-sign{height:256px;justify-content:center;gap:12px;padding:18px 22px}
+.cd-sign-wrap.in-scene .desk-q{font-size:23px}
+.cd-sign-wrap.in-scene .desk-a{font-size:37px}
+.cd-sign-wrap.in-scene .sign-tile{width:64px;height:64px}
+.cd-sign-wrap.in-scene .sign-tile .icon{width:34px;height:34px}
+.cd-sign-wrap.in-scene .cd-arrow{top:4px;bottom:auto;width:66px;height:80px;margin-left:-33px}
+.cd-sign-wrap.in-scene .cd-sign::before,.cd-sign-wrap.in-scene .cd-sign::after{content:"";position:absolute;top:-16px;width:16px;height:26px;border-radius:3px;background:#9199A8;border:2px solid #39404F}
+.cd-sign-wrap.in-scene .cd-sign::before{left:54px}.cd-sign-wrap.in-scene .cd-sign::after{right:54px}
+
+/* On phones: two cards along the bottom. */
+.cd-choices{position:absolute;z-index:8;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));display:none;gap:10px}
+.is-narrow .cd-choices{display:flex}
+.cd-choices .cd-sign-wrap{flex:1 1 0;min-width:0}
+.cd-choices .cd-arrow{display:none}
+.cd-choices .cd-sign{height:100%;gap:6px;padding:12px 10px 14px}
+.cd-choices .sign-tile{width:40px;height:40px}
+.cd-choices .sign-tile .icon{width:22px;height:22px}
+.cd-choices .desk-q{font-size:13px}
+.cd-choices .desk-a{font-size:17px}
+.is-open .cd-choices{opacity:0;pointer-events:none}
+
+/* ---- Form sheets ---- */
+.cd-panel{position:absolute;z-index:30;top:84px;bottom:16px;width:min(600px,46vw);display:flex;flex-direction:column;background:#FFFFFF;border:2px solid var(--slate-700);border-radius:4px;box-shadow:6px 6px 0 #07152F;opacity:0;visibility:hidden;transition:opacity 360ms var(--ease-out),transform 360ms var(--ease-out),visibility 0s linear 360ms}
+.cd-panel[data-panel="make"]{right:clamp(16px,3vw,48px);transform:translateX(28px)}
+.cd-panel[data-panel="solve"]{left:clamp(16px,3vw,48px);transform:translateX(-28px)}
+.cd-panel.is-shown{opacity:1;visibility:visible;transform:none;transition:opacity 360ms var(--ease-out) 520ms,transform 360ms var(--ease-out) 520ms,visibility 0s}
+.sheet-head{flex:none;display:flex;align-items:stretch;border-bottom:2px solid var(--slate-700);background:#0C3A85;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:16px 16px;color:#FFFFFF}
+.sheet-block{flex:1;display:flex;flex-direction:column;gap:6px;padding:16px 20px 18px}
+.sheet-block h2{margin:0;font:700 clamp(22px,2.2vw,28px)/1.1 var(--font-display);letter-spacing:var(--ls-display);color:#FFFFFF}
+.sheet-block p{margin:0;font:500 14px/1.5 var(--font-body);color:#D9E6FD}
+.sheet-close{flex:none;width:52px;display:flex;align-items:center;justify-content:center;padding:0;border:0;border-left:2px solid rgba(255,255,255,.5);background:transparent;color:#FFFFFF;cursor:pointer;transition:background-color var(--dur-fast) var(--ease-out)}
+.sheet-close:hover{background:rgba(255,255,255,.12)}
+.sheet-close:focus-visible{box-shadow:inset 0 0 0 2px #FFFFFF}
+.sheet-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:20px 22px 28px;scroll-padding:16px}
 
 @media (max-width:759.98px){
-  .cd-title{top:calc(clamp(14px,2.4vh,24px) + 64px)}
-  .cd-mike{height:54%}
-  .cd-bubble{bottom:calc(54% + 16px);width:min(300px,84vw)}
+  /* No room for the title block beside Mike's bubble on phones: keep the heading for screen readers only. */
+  .cd-title{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .cd-bubble{width:min(300px,84vw)}
+  .cd-panel,.cd-panel[data-panel="make"],.cd-panel[data-panel="solve"]{left:0;right:0;top:76px;bottom:0;width:auto;border-radius:6px 6px 0 0;border-bottom:0;box-shadow:none;transform:translateY(24px)}
+  .cd-panel.is-shown{transform:none;transition-delay:200ms}
+  .sheet-body{padding:16px 16px 28px}
 }

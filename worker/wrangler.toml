@@ -1,0 +1,18 @@
+# Mike's Models forms mini-server. Deploy: npm run deploy (after `npx wrangler login`).
+name = "mikes-models-forms"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+
+[vars]
+TO_EMAIL = "mikes3dmodels@gmail.com"
+FROM_EMAIL = "Mike's Models <onboarding@resend.dev>"
+SITE_ORIGINS = "https://mikesmodels.github.io,http://localhost:5173,http://localhost:4173"
+SITE_URL = "https://mikesmodels.github.io"
+GITHUB_REPO = "MikesModels/mikesmodels.github.io"
+REVIEWS_PATH = "src/data/reviews.json"
+
+# Secrets — never put these in this file. Set each one with:  npx wrangler secret put NAME
+#   RESEND_API_KEY    (resend.com → API Keys)
+#   APPROVE_SECRET    (any long random string; signs the review-approval links)
+#   GITHUB_TOKEN      (fine-grained token: this repo only, Contents read & write)
+#   TURNSTILE_SECRET  (Cloudflare Turnstile widget secret key)

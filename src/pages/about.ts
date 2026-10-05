@@ -1,11 +1,14 @@
 import '../styles/site.css';
 import '../styles/about.css';
+import '../styles/forms.css';
 import { startAmbientMotion } from '../lib/motion';
-import { PRODUCTS } from '../data/products';
+import { initBackNav } from '../lib/nav';
+import { mountForm } from '../lib/forms';
+import { REVIEW } from '../data/form-specs';
 import approved from '../data/reviews.json';
 
-type Review = { name: string; product: string; rating: number; comment: string };
-const EMAIL = 'mikes3dmodels@gmail.com';
+// Published reviews, newest first. The mini-server adds one here when Mike approves it.
+type Review = { id?: string; name: string; product: string; rating: number; comment: string; date?: string };
 const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel)!;
 
 const main = $('main');
@@ -128,50 +131,13 @@ new ResizeObserver(update).observe(stacks[0]);
 new ResizeObserver(update).observe(stacks[1]);
 document.fonts?.ready.then(update);
 
-// ---- Leave a review: emails Mike a pre-filled review to approve ----
+// ---- Leave a review: in-page form, emailed to Mike for approval ----
 const dialog = $<HTMLDialogElement>('[data-dialog]');
-const form = $<HTMLFormElement>('[data-form]'), thanks = $('[data-thanks]'), err = $('[data-err]');
-const select = $<HTMLSelectElement>('#rv-product'), starsEl = $('[data-stars]'), ratingText = $('[data-rating-text]');
-let rating = 0;
-
-for (const name of [...PRODUCTS.map(p => p.name), 'Custom order']) select.add(new Option(name, name));
-
-function renderStars() {
-  starsEl.innerHTML = [1, 2, 3, 4, 5].map(n =>
-    `<button type="button" class="star-btn" data-n="${n}" aria-label="${n} star${n > 1 ? 's' : ''}" aria-pressed="${n === rating}">${star(n <= rating, 30, 1.5)}</button>`).join('');
-  ratingText.textContent = `${rating} of 5`;
-}
-starsEl.addEventListener('click', e => {
-  const b = (e.target as Element).closest<HTMLElement>('[data-n]');
-  if (!b) return;
-  const n = +b.dataset.n!;
-  rating = rating === n ? 0 : n;
-  renderStars();
-  starsEl.querySelector<HTMLElement>(`[data-n="${n}"]`)!.focus();
-});
-renderStars();
-
-const showErr = (m: string) => { err.textContent = m; err.hidden = !m; };
-form.addEventListener('input', () => showErr(''));
-
-$('[data-open-form]').addEventListener('click', () => {
-  form.hidden = false; thanks.hidden = true; showErr('');
-  dialog.showModal();
-});
+const reviewForm = mountForm($('[data-review-form]'), REVIEW);
+$('[data-open-form]').addEventListener('click', () => { dialog.showModal(); reviewForm.shown(); });
 dialog.addEventListener('click', e => {
   if (e.target === dialog || (e.target as Element).closest('[data-close]')) dialog.close();
 });
 
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  const data = new FormData(form);
-  const name = String(data.get('name')).trim(), product = String(data.get('product')), comment = String(data.get('comment')).trim();
-  if (!name || !product || !comment) return showErr('Add your name, the product and a quick comment.');
-  const subject = `Review: ${product}${rating ? ` (${rating}/5)` : ''}`;
-  const body = `Name: ${name}\nProduct: ${product}\nRating: ${rating} of 5\n\n${comment}\n\n(Sent from the review form on the Mike's Models website.)`;
-  window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  form.reset(); rating = 0; renderStars();
-  form.hidden = true; thanks.hidden = false;
-});
-
+initBackNav();
 startAmbientMotion();

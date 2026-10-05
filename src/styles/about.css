@@ -40,8 +40,6 @@
 .review-empty strong{font:700 clamp(16px,2.2vh,19px)/1.2 var(--font-display);color:var(--slate-900)}
 .review-empty span{font:500 clamp(13px,1.8vh,15px)/1.45 var(--font-body);color:var(--slate-600)}
 
-.star-btn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;background:none;border:0;border-radius:3px;cursor:pointer}
-.star-btn:hover{background:var(--amber-50)}
 
 /* narrow = width < 900 */
 .about-narrow-only{display:none}

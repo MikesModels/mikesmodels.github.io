@@ -1,23 +1,15 @@
 <!doctype html>
 <html lang="en">
 <head>
-<x-include src="head" title="Custom request — Mike's Models" description="Start a custom 3D design or printing request with Mike's Models." theme="#0C3A85"></x-include>
-<script type="module" src="/src/pages/custom-request.ts"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Custom request — Mike's Models</title>
+<meta name="robots" content="noindex">
+<!-- Old address: the request forms now live on the custom design page. -->
+<script>location.replace('../custom-design/?form=' + (/[?&]type=solve(&|$)/.test(location.search) ? 'solve' : 'make'));</script>
+<meta http-equiv="refresh" content="0;url=../custom-design/?form=make">
 </head>
 <body>
-<main class="cr">
-  <x-include src="back-link"></x-include>
-  <section class="cr-card">
-    <span class="sign-tile cr-icon"><x-icon name="pencil-ruler" size="26" class="cr-icon-make"></x-icon><x-icon name="lightbulb" size="26" class="cr-icon-solve"></x-icon></span>
-    <span class="cr-eyebrow" data-copy="eyebrow">Custom design · Make it</span>
-    <h1 data-copy="title">Let's make it.</h1>
-    <p class="cr-body" data-copy="body">You know what you want. I'll need the details: what it is, rough size, colour and how many. Sketches, photos and STL files all help.</p>
-    <div class="cr-note">This form is still on the drawing board. For now, email me at <a href="mailto:mikes3dmodels@gmail.com">mikes3dmodels@gmail.com</a>.</div>
-    <div class="cr-actions">
-      <a class="btn btn--primary" data-mailto href="mailto:mikes3dmodels@gmail.com?subject=Custom%20design%3A%20make%20it"><x-icon name="mail" size="18"></x-icon>Email Mike</a>
-      <a class="btn btn--secondary" href="{{root}}custom-design/"><x-icon name="arrow-left" size="18"></x-icon>Back to the design room</a>
-    </div>
-  </section>
-</main>
+<p><a href="../custom-design/">Continue to the custom design page</a></p>
 </body>
 </html>

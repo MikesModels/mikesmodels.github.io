@@ -20,14 +20,15 @@ button,input,select,textarea{font:inherit}
 /* ---- Scene page shell ---- */
 .scene{position:relative;width:100%;overflow:hidden;font-family:var(--font-body)}
 
-/* ---- "Back to booth" link ---- */
+/* ---- Site nav: back arrow + "Back to Booth", two buttons in one printed box ---- */
 .site-nav{position:absolute;top:clamp(14px,2.4vh,24px);left:clamp(14px,2vw,28px);z-index:20;display:flex}
-.back-link{display:flex;align-items:center;gap:10px;min-height:44px;padding:4px 16px 4px 12px;background:#FFFFFF;color:var(--slate-900);border:2px solid var(--slate-700);border-radius:4px;box-shadow:3px 3px 0 #2A2F3A;font:600 15px/1 var(--font-display);text-decoration:none;white-space:nowrap;transition:transform 200ms var(--ease-out),box-shadow 200ms var(--ease-out)}
-.back-link:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 #2A2F3A;color:var(--slate-900)}
-.back-link:active{transform:translateY(1px);box-shadow:none}
-.back-link:focus-visible{box-shadow:var(--focus-ring)}
-.back-link img{display:block;height:clamp(30px,4.4vh,42px);width:auto}
-.back-link .divider{align-self:stretch;width:1px;margin:4px 0;background:var(--slate-200)}
+.back-box{display:flex;align-items:stretch;background:#FFFFFF;border:2px solid var(--slate-700);border-radius:4px;box-shadow:3px 3px 0 #2A2F3A;overflow:hidden}
+.back-btn{display:flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;color:var(--slate-900);font:600 15px/1 var(--font-display);text-decoration:none;white-space:nowrap;transition:background-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+.back-btn--arrow{width:48px;padding:0}
+.back-btn:hover{background:var(--blue-50);color:var(--blue-700)}
+.back-btn:active{background:var(--blue-100)}
+.back-btn:focus-visible{box-shadow:inset 0 0 0 2px var(--blue-500)}
+.back-divider{width:2px;background:var(--slate-200);margin:8px 0}
 
 /* ---- Printed sign card (nav signs, desks, contact + reviews) ---- */
 .sign{position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;background:#FFFFFF;color:var(--slate-900);border:2px solid var(--slate-700);border-radius:4px;box-shadow:1px 1px 0 #2A2F3A,2px 2px 0 #2A2F3A,3px 3px 0 #2A2F3A,4px 4px 0 #2A2F3A,5px 5px 0 #2A2F3A;text-decoration:none;outline:none;transition:transform 200ms var(--ease-out),box-shadow 200ms var(--ease-out)}
@@ -85,6 +86,7 @@ a.sign:active{transform:translateY(1px)}
 .dialog-head h2{font:var(--type-h4);color:var(--text-strong)}
 .dialog-head p{margin:6px 0 0;font:var(--type-body-sm);color:var(--text-muted)}
 .dialog-body{padding:16px 24px 24px}
+.dialog--form{max-width:560px}
 
 /* ---- Image placeholder (empty photo slot, styled like the design's image slots) ---- */
 .ph{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;overflow:hidden;background:rgba(127,127,127,.08);color:var(--text-body);border-radius:4px;text-align:center;font:500 13px/1.45 var(--font-body);letter-spacing:.01em}
