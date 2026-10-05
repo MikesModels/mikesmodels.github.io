@@ -6,6 +6,7 @@ import { initBackNav } from '../lib/nav';
 import { mountForm } from '../lib/forms';
 import { MAKE, SOLVE } from '../data/form-specs';
 import { buildRoom, DESKS } from './design-room';
+import { pageReady } from '../lib/transition';
 
 type Key = 'make' | 'solve';
 const MSGS: Record<string, [string, string]> = {
@@ -120,8 +121,11 @@ $('[data-dim]').addEventListener('click', closeForm);
 addEventListener('keydown', e => { if (e.key === 'Escape' && open) closeForm(); });
 initBackNav(() => { if (open) { closeForm(); return true; } return false; });
 
+// Back/forward cache restores the page mid-hover on the placard that was clicked: reset Mike's bubble.
+addEventListener('pageshow', e => { if (e.persisted) say('default'); });
 addEventListener('resize', layout);
 document.fonts?.ready.then(placeBubble);
 layout();
 setOpen(formFromUrl());
 startAmbientMotion();
+pageReady();

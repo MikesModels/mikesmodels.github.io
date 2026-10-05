@@ -6,6 +6,7 @@ import { initBackNav } from '../lib/nav';
 import { mountForm } from '../lib/forms';
 import { REVIEW } from '../data/form-specs';
 import approved from '../data/reviews.json';
+import { pageReady } from '../lib/transition';
 
 // Published reviews, newest first. The mini-server adds one here when Mike approves it.
 type Review = { id?: string; name: string; product: string; rating: number; comment: string; date?: string };
@@ -141,3 +142,4 @@ dialog.addEventListener('click', e => {
 
 initBackNav();
 startAmbientMotion();
+pageReady();

@@ -1,6 +1,7 @@
 import '../styles/site.css';
 import '../styles/home.css';
 import { startAmbientMotion } from '../lib/motion';
+import { pageReady } from '../lib/transition';
 
 const MSGS: Record<string, [string, string]> = {
   default: ["Welcome to Mike's Models!", "From fun toys and gadgets to DIY and engineering projects, I'm here to help! Select a sign to continue."],
@@ -123,6 +124,8 @@ function place() {
   timer = window.setTimeout(run, 80);
 }
 
+// Back/forward cache restores the page as it was left: mid-hover on the sign that was clicked. Reset the bubble.
+addEventListener('pageshow', e => { if (e.persisted) say('default'); });
 window.addEventListener('resize', place);
 const ro = new ResizeObserver(place);
 ro.observe(main);
@@ -131,3 +134,4 @@ document.fonts?.ready.then(place);
 placeBubble();
 
 startAmbientMotion();
+pageReady();

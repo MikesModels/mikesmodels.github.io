@@ -3,6 +3,7 @@ import '../styles/gallery.css';
 import { PRODUCTS, photoUrl } from '../data/products';
 import { bayHtml, wallHtml, caseHtml } from './gallery-markup';
 import { initBackNav } from '../lib/nav';
+import { pageReady } from '../lib/transition';
 
 // Hallway geometry (px of depth). Cases stand in pairs, one bay (760px) apart; with 12 items this is
 // the design's CAMS = [0, 400, 1160, 1920, 2680, 3440, 4200, 4580] and an end wall at 5080.
@@ -185,4 +186,5 @@ function onResize() {
 }
 window.addEventListener('resize', onResize);
 onResize();
+pageReady();
 initBackNav(() => { if (state.sel != null) { close(); return true; } return false; });

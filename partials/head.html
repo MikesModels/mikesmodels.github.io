@@ -19,3 +19,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/src/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/src/assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Page transitions (src/lib/transition.ts): arriving from another page on the site starts black and fades in once
+     the page is ready; the 1.2 s timer is a safety net so the page can never stay covered. -->
+<style>html.mm-cover::after,html.mm-leaving::after{content:"";position:fixed;inset:0;z-index:2147483647;background:#000;pointer-events:none}html.mm-cover::after{opacity:1;transition:opacity .24s ease-out}html.mm-cover.mm-ready::after{opacity:0}html.mm-leaving::after{opacity:1;animation:mm-out .18s ease-in}@keyframes mm-out{from{opacity:0}}</style>
+<script>try{if(sessionStorage.getItem('mm-fade')){var r=document.documentElement;r.classList.add('mm-cover');setTimeout(function(){r.classList.add('mm-ready')},1200)}}catch(e){}</script>
