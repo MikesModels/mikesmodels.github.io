@@ -18,13 +18,16 @@ const tailLine = bubble.querySelector('[data-tail-line]')!;
 
 // ---- Bubble copy reacts to the signs ----
 let msg = 'default';
-function say(key: string) {
-  if (key === msg) return;
-  msg = key;
+const setText = (key: string) => {
   const [title, body] = MSGS[key] || MSGS.default;
   main.querySelectorAll('[data-msg-title]').forEach(e => (e.textContent = title));
   main.querySelectorAll('[data-msg-body]').forEach(e => (e.textContent = body));
-  place();
+};
+function say(key: string) {
+  if (key === msg) return;
+  msg = key;
+  setText(key);
+  fit(); // same spot: only the height changes, growing upward from a fixed bottom edge
 }
 main.querySelectorAll<HTMLAnchorElement>('a[data-key]').forEach(a => {
   const enter = () => say(a.dataset.key!);
@@ -35,12 +38,21 @@ main.querySelectorAll<HTMLAnchorElement>('a[data-key]').forEach(a => {
   a.addEventListener('blur', leave);
 });
 
-// ---- placeBubble(): put the bubble beside Mike's head, in the open space with the least overlap ----
+// ---- Bubble placement ----
+// One consistent spot: to the left of Mike's head (there's open sky there at every desktop size), sized for the
+// longest (welcome) message. Hover messages keep the same left, width and bottom edge, so the bubble never jumps.
 type Box = { l: number; t: number; r: number; b: number };
+let anchor: { x: number; bottom: number; w: number; side: 'left' | 'right' } | null = null;
+
+function geometry() {
+  const M = main.getBoundingClientRect(), R = svg.getBoundingClientRect(), s = R.width / 420;
+  return { M, R, s };
+}
 
 function placeBubble() {
   if (!bubble.offsetParent) return; // hidden on narrow screens
-  const M = main.getBoundingClientRect(), R = svg.getBoundingClientRect(), F = frame.getBoundingClientRect(), s = R.width / 420;
+  if (msg !== 'default') setText('default'); // always size the spot for the welcome message
+  const { M, R, s } = geometry(), F = frame.getBoundingClientRect();
   const box = (l: number, t: number, r: number, bt: number): Box => ({ l: R.left + l * s, t: R.top + t * s, r: R.left + r * s, b: R.top + bt * s });
   const head = box(112, 76, 248, 212), arm = box(312, 148, 384, 330), body = box(70, 236, 286, 440);
   const pad = 10;
@@ -51,11 +63,11 @@ function placeBubble() {
   const limM = { l: M.left + 12, r: M.right - 12, t: M.top + 10, b: M.bottom - 10 };
   const mouthY = R.top + 186 * s;
   const ov = (a: Box, o: Box) => Math.max(0, Math.min(a.r, o.r) - Math.max(a.l, o.l)) * Math.max(0, Math.min(a.b, o.b) - Math.max(a.t, o.t));
-  const prevW = bubble.style.width, widths = [200, 220, 180];
-  type Best = { score: number; x: number; y: number; w: number; side: string; o: number };
-  const search = (lim: Box, dxs: number[]) => {
+  const prevW = bubble.style.width;
+  type Best = { score: number; x: number; y: number; w: number; o: number };
+  const search = (side: 'left' | 'right', lim: Box, dxs: number[]) => {
     let best: Best | null = null;
-    for (const side of ['right', 'left']) for (const [wi, w] of widths.entries()) {
+    for (const [wi, w] of [210, 190, 175].entries()) {
       bubble.style.width = w + 'px';
       const h = bubble.offsetHeight;
       for (const dx of dxs) {
@@ -66,27 +78,41 @@ function placeBubble() {
           const off = (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 6, y = ideal + off;
           if (y < lim.t || y + h > lim.b || y > head.b + 60 || y + h < head.t + 10) continue;
           const o = obst.reduce((a, q) => a + ov({ l: x, r: x + w, t: y, b: y + h }, q), 0);
-          const score = o * 10 + Math.abs(off) + (side === 'left' ? 60 : 0) + wi * 25 + dx * 0.8;
-          if (!best || score < best.score) best = { score, x, y, w, side, o };
+          const score = o * 10 + Math.abs(off) + wi * 25 + dx * 0.8;
+          if (!best || score < best.score) best = { score, x, y, w, o };
           if (o === 0) break;
         }
       }
     }
     return best;
   };
-  let b = search(limF, [0, 30, 60, 100]);
-  // Short/landscape screens: the booth frame is too tight, so let the bubble float out into the sky
-  if (!b || b.o > 0) b = search(limM, [0, 30, 60, 100, 150, 200, 260]);
+  // Left of Mike inside the booth; then left, allowed out into the sky; right side only as a last resort.
+  let side: 'left' | 'right' = 'left';
+  let b = search('left', limF, [0, 20, 40]);
+  if (!b || b.o > 0) b = search('left', limM, [0, 20, 40, 80]);
+  if (!b || b.o > 0) { const r = search('right', limM, [0, 30, 60, 100]); if (r && (!b || r.o < b.o)) { b = r; side = 'right'; } }
   bubble.style.width = prevW;
+  if (msg !== 'default') setText(msg);
   if (!b) return;
-  const bx = Math.round(b.x), by = Math.round(b.y), right = b.side === 'right';
-  const tx = Math.round(R.left + (right ? 246 : 114) * s) - bx - 2, ty = Math.round(R.top + 128 * s) - by - 2;
-  const bc = Math.min(Math.max(ty, 22), 60), e = right ? -2 : b.w - 2, ei = right ? e + 3 : e - 3;
+  bubble.style.width = b.w + 'px';
+  anchor = { x: Math.round(b.x - M.left), bottom: Math.round(b.y - M.top + bubble.offsetHeight), w: b.w, side };
+  fit();
+  bubble.classList.add('is-placed');
+}
+
+/** Apply the anchor for the current message: same left, width and bottom edge; then aim the tail at Mike's mouth. */
+function fit() {
+  if (!anchor || !bubble.offsetParent) return;
+  const { M, R, s } = geometry();
+  bubble.style.width = anchor.w + 'px';
+  const h = bubble.offsetHeight, top = anchor.bottom - h, right = anchor.side === 'right';
+  Object.assign(bubble.style, { left: anchor.x + 'px', top: top + 'px' });
+  const bx = anchor.x + M.left, by = top + M.top;
+  const tx = Math.round(R.left + (right ? 246 : 114) * s - bx - 2), ty = Math.round(R.top + 128 * s - by - 2);
+  const bc = Math.min(Math.max(ty, 22), Math.max(22, Math.min(60, h - 30))), e = right ? -2 : anchor.w - 2, ei = right ? e + 3 : e - 3;
   const y1 = bc - 11, y2 = bc + 11;
-  Object.assign(bubble.style, { left: bx - Math.round(M.left) + 'px', top: by - Math.round(M.top) + 'px', width: b.w + 'px' });
   tailFill.setAttribute('points', `${ei},${y1 - 1} ${tx},${ty} ${ei},${y2 + 1}`);
   tailLine.setAttribute('d', `M${e + 1} ${y1} L${tx} ${ty} L${e + 1} ${y2}`);
-  bubble.classList.add('is-placed');
 }
 
 let raf = 0, timer = 0;

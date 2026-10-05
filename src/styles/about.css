@@ -44,6 +44,9 @@
 /* narrow = width < 900 */
 .about-narrow-only{display:none}
 @media (max-width:899.98px){
+  /* Start close to the height layout() will set (the stacked bubbles make the page taller on phones),
+     so the scene doesn't jump down once the script runs. */
+  .about{min-height:clamp(820px,calc(1200px - 75vw),960px)}
   .about-wide-only{display:none !important}
   .about-narrow-only{display:flex}
   .about-banner{top:calc(4% + 42px)}
