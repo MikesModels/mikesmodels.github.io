@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "MM-1004-BI6G",
+    "name": "test",
+    "product": "Gear fidget cube",
+    "rating": 5,
+    "comment": "test",
+    "date": "2026-10-05"
+  }
+]
