@@ -86,7 +86,7 @@ export function mountForm(host: HTMLElement, spec: FormSpec, opts: { onDone?: ()
       <div class="form-notice" role="alert" hidden></div>
       <p class="form-editing" hidden></p>
       ${spec.sections.map((s, i) => `<section class="form-section"><h3><span class="form-step">${String(i + 1).padStart(2, '0')}</span>${esc(s.title)}</h3>${s.fields.map(f => fieldHtml(f, p)).join('')}</section>`).join('')}
-      <div class="hp" aria-hidden="true"><label>Leave this empty<input name="website" tabindex="-1" autocomplete="off"></label></div>
+      <div class="hp" aria-hidden="true"><label>Leave this empty<input name="mm_hp" tabindex="-1" autocomplete="off" data-lpignore="true" data-1p-ignore></label></div>
       <div class="spam-slot"></div>
       <div class="form-actions">
         <p class="form-send-err" role="alert" hidden></p>
@@ -252,7 +252,7 @@ export function mountForm(host: HTMLElement, spec: FormSpec, opts: { onDone?: ()
     const data = new FormData();
     data.set('payload', JSON.stringify({ form: spec.type, ref, edit: isEdit, answers }));
     files.forEach(f => data.append('files', f, f.name));
-    data.set('website', val('website'));
+    data.set('mm_hp', val('mm_hp'));
     const check2 = spam ? await spam : null;
     data.set('cf-turnstile-response', check2?.token() ?? '');
 

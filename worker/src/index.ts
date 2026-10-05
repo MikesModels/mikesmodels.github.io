@@ -60,11 +60,12 @@ export default {
 // ------------------------------------------------------------------ submit
 async function submit(req: Request, env: Env, url: URL, cors: Record<string, string>) {
   const fd = await req.formData();
-  if (String(fd.get('website') ?? '')) return json({ ok: true }, 200, cors); // honeypot: pretend it worked
+  // Honeypot (an off-screen field only bots fill): pretend it worked, send nothing.
+  if (String(fd.get('mm_hp') ?? '')) { console.log('honeypot hit — not sent'); return json({ ok: true }, 200, cors); }
 
   if (env.TURNSTILE_SECRET) {
     const ok = await verifyTurnstile(env.TURNSTILE_SECRET, String(fd.get('cf-turnstile-response') ?? ''), req.headers.get('CF-Connecting-IP'));
-    if (!ok) return json({ error: 'The spam check didn’t pass — please try again.' }, 400, cors);
+    if (!ok) { console.log('spam check failed'); return json({ error: 'The spam check didn’t pass — please try again.' }, 400, cors); }
   }
 
   let payload: { form?: string; ref?: string; edit?: boolean; answers?: Answer[] };
@@ -122,6 +123,7 @@ async function submit(req: Request, env: Env, url: URL, cors: Record<string, str
     body: JSON.stringify(message),
   });
   if (!res.ok) { console.error('Resend', res.status, await res.text()); return json({ error: 'The email service didn’t accept it.' }, 502, cors); }
+  console.log(`sent ${form} ${ref} → Resend id ${((await res.json()) as { id?: string }).id}`);
   return json({ ok: true, ref }, 200, cors);
 }
 
