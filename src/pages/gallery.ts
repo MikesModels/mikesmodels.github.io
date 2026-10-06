@@ -20,7 +20,7 @@ const state: State = { step: 0, hideCam: 0, sel: null, lastSel: null, scale: 1, 
 
 const main = $('main'), stage = $('[data-stage]'), world = $('[data-world]'), end = $('[data-end]');
 const endShade = $('[data-end-shade]'), focus = $('[data-focus]'), panel = $('[data-panel]');
-const fwdBtn = $('[data-fwd]'), backBtn = $('[data-back]');
+const fwdBtn = $('[data-fwd]'), backBtn = $('[data-walk-back]');
 
 // ---- Build the hall ----
 const bays: { parts: HTMLElement[]; shades: HTMLElement[]; zc: number }[] = [];
