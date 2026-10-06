@@ -6,20 +6,12 @@ import { PRODUCTS } from './products';
 const contact: Field[] = [
   { kind: 'text', name: 'name', label: 'Your name', required: true, autocomplete: 'name', maxLength: 80 },
   { kind: 'email', name: 'email', label: 'Email', required: true, autocomplete: 'email', maxLength: 120, help: 'I’ll reply here.' },
-  { kind: 'tel', name: 'phone', label: 'Phone', autocomplete: 'tel', maxLength: 30 },
-  { kind: 'select', name: 'contact_pref', label: 'Best way to reach you', options: ['Email', 'Phone call', 'Text message'], placeholder: 'No preference' },
 ];
 
 export const MAKE: FormSpec = {
   type: 'make',
   sections: [
-    {
-      title: 'Your contact details',
-      fields: [
-        { kind: 'text', name: 'name', label: 'Your name', required: true, autocomplete: 'name', maxLength: 80 },
-        { kind: 'email', name: 'email', label: 'Email', required: true, autocomplete: 'email', maxLength: 120, help: 'I’ll reply here.' },
-      ],
-    },
+    { title: 'Your contact details', fields: contact },
     {
       title: 'The project',
       fields: [
@@ -58,13 +50,13 @@ export const SOLVE: FormSpec = {
       ],
     },
     {
-      title: 'Limits and wishes',
+      title: 'Limits and preferences',
       fields: [
-        { kind: 'dims', name: 'space', label: 'Space it has to fit', help: 'Rough is fine. Leave blank if you’re not sure.' },
-        { kind: 'textarea', name: 'must_haves', label: 'Must-haves', rows: 3, help: 'Anything it has to have or avoid: colours, mounting, safety, looks.' },
+        { kind: 'textarea', name: 'limits', label: 'Limitations and restrictions', rows: 4, help: 'Anything it has to work within: roughly how much space it has, what it must clear or attach to, weight it holds, heat, outdoor use. Rough is fine.' },
+        { kind: 'textarea', name: 'preferences', label: 'Colour, material and other preferences', rows: 3, help: 'Colours, material (e.g. PLA, PETG, flexible), looks, or anything else you’d like or need.' },
         { kind: 'textarea', name: 'tried', label: 'What have you tried so far?', rows: 3 },
         { kind: 'select', name: 'budget', label: 'Budget', options: ['Under $25', '$25–$50', '$50–$100', '$100+'], placeholder: 'Not sure yet' },
-        { kind: 'select', name: 'timeline', label: 'Timeline', options: ['No rush', 'Within a month', 'Within two weeks', 'As soon as possible'], placeholder: 'Not sure yet' },
+        { kind: 'text', name: 'deadline', label: 'Preferred deadline', maxLength: 80, placeholder: 'e.g. by November 20, within a month, no rush' },
       ],
     },
     { title: 'Photos', fields: [{ kind: 'files', name: 'files', label: 'Photos of the problem or the space', help: 'Show me what you’re dealing with — a few angles help.' }] },
