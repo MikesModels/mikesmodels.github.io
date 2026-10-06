@@ -13,23 +13,26 @@ const contact: Field[] = [
 export const MAKE: FormSpec = {
   type: 'make',
   sections: [
-    { title: 'Your contact details', fields: contact },
+    {
+      title: 'Your contact details',
+      fields: [
+        { kind: 'text', name: 'name', label: 'Your name', required: true, autocomplete: 'name', maxLength: 80 },
+        { kind: 'email', name: 'email', label: 'Email', required: true, autocomplete: 'email', maxLength: 120, help: 'I’ll reply here.' },
+      ],
+    },
     {
       title: 'The project',
       fields: [
         { kind: 'text', name: 'title', label: 'What is it?', required: true, maxLength: 120, placeholder: 'e.g. Replacement drawer handle' },
-        { kind: 'textarea', name: 'description', label: 'Overall description', required: true, rows: 5, help: 'What it is, what it’s for, and how it should look or work.' },
+        { kind: 'textarea', name: 'description', label: 'Overall description', required: true, rows: 6, help: 'Be as specific as you can, and include every dimension or number you know — sizes, hole spacing, thickness, how many you need, the weight it has to hold.' },
       ],
     },
     {
-      title: 'Size and specifics',
+      title: 'Limits and preferences',
       fields: [
-        { kind: 'dims', name: 'dimensions', label: 'Dimensions', required: true, help: 'Fill in what you know — one measurement is enough for a flat part.' },
-        { kind: 'number', name: 'quantity', label: 'How many?', required: true, min: 1, max: 999, value: 1 },
-        { kind: 'text', name: 'colours', label: 'Colour(s)', maxLength: 120, placeholder: 'e.g. Matte black, or match a photo' },
-        { kind: 'select', name: 'material', label: 'Material', options: ['PLA (everyday, rigid)', 'PETG (tougher, heat resistant)', 'TPU (flexible, rubbery)', 'ASA (outdoors, UV resistant)', 'Help me choose'], placeholder: 'No preference' },
-        { kind: 'textarea', name: 'specifics', label: 'Other specifics', rows: 4, help: 'Fit and tolerances, holes or threads, strength, finish — anything else I should know.' },
-        { kind: 'date', name: 'needed_by', label: 'Needed by' },
+        { kind: 'textarea', name: 'limits', label: 'Limitations and restrictions', rows: 4, help: 'Anything the design has to work within: space it must fit, parts it must clear or attach to, maximum size or weight, heat, outdoor use, budget.' },
+        { kind: 'textarea', name: 'preferences', label: 'Colour, material and other preferences', rows: 3, help: 'Colours, material (e.g. PLA, PETG, flexible), finish, or anything else you’d like or need.' },
+        { kind: 'text', name: 'deadline', label: 'Preferred deadline', maxLength: 80, placeholder: 'e.g. by November 20, within a month, no rush' },
       ],
     },
     { title: 'Images and files', fields: [{ kind: 'files', name: 'files', label: 'Photos, sketches or model files', help: 'A photo with a ruler or coin for scale helps a lot.' }] },

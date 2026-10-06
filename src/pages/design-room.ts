@@ -136,19 +136,36 @@ const CABINET_DOORS = svg(700, 240, `<rect width="700" height="240" fill="#4B526
 const MUG = svg(40, 48, `<rect x="2" y="4" width="30" height="42" rx="4" fill="#FFFFFF" stroke="#C2C7D1"/><rect x="2" y="16" width="30" height="8" fill="#1F6FEB"/><path d="M32 14 q10 0 10 10 q0 10 -10 10" fill="none" stroke="#C2C7D1" stroke-width="4"/>`);
 const PENCIL_CUP = svg(50, 90, `<path d="M14 6 L16 50 M24 2 L24 50 M34 8 L31 50" stroke-width="4" stroke-linecap="round" fill="none" stroke="#E8A132"/><path d="M24 2 l-2 6 h4 z" fill="#39404F"/><rect x="6" y="46" width="38" height="42" rx="4" fill="#39404F"/><rect x="6" y="46" width="38" height="8" fill="#4B5263"/>`);
 
-const PEGBOARD = svg(980, 380, `<rect width="980" height="380" rx="4" fill="#D8C29A"/><rect width="980" height="380" rx="4" fill="none" stroke="#B49A6C" stroke-width="10"/>
-  <g fill="#9C845A">${Array.from({ length: 16 }, (_, r) => Array.from({ length: 41 }, (_, c) => `<circle cx="${18 + c * 23.6}" cy="${16 + r * 23.4}" r="3"/>`).join('')).join('')}</g>
-  <g fill="#39404F" stroke="#1B1F27" stroke-width="2" stroke-linejoin="round">
-    <path d="M70 60 l20 0 l6 14 l0 200 a12 12 0 0 1 -24 0 l0 -200 z"/>
-    <path d="M150 50 l40 0 l-6 40 l-4 190 l-20 0 l-4 -190 z" fill="#E0364F"/>
-    <path d="M250 60 l24 0 l0 230 l-24 0 z" fill="#C2C7D1"/><path d="M250 60 m4 20 h16 M254 110 h16 M254 140 h16 M254 170 h16 M254 200 h16 M254 230 h16" stroke="#687082"/>
-    <path d="M330 70 q-20 40 -6 90 l14 120 l14 0 l6 -120 q14 -50 -6 -90 z" fill="#1F6FEB"/>
-    <path d="M430 60 l40 0 l0 60 l-12 0 l0 170 l-16 0 l0 -170 l-12 0 z" fill="#E8A132"/>
-    <path d="M540 70 a30 30 0 1 1 0.1 0 m0 14 a16 16 0 1 0 0.1 0" fill="#9199A8"/><path d="M528 120 l24 0 l-4 160 l-16 0 z" fill="#9199A8"/>
-    <path d="M640 64 l10 0 l40 200 l-10 4 z M700 64 l-10 0 l-40 200 l10 4 z" fill="#12A150"/>
-    <path d="M780 60 l90 0 l0 30 l-90 0 z M800 90 l0 190 l14 0 l0 -190 z" fill="#4B5263"/>
-  </g>
-  <g stroke="#9C845A" stroke-width="4" stroke-linecap="round">${[80, 170, 262, 338, 450, 540, 670, 825].map(x => `<path d="M${x} 46 v10"/>`).join('')}</g>`);
+const PEGBOARD = svg(980, 380, `<defs>
+    <linearGradient id="pgSteel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8A93A3"/><stop offset=".45" stop-color="#E7EBF0"/><stop offset=".6" stop-color="#C2C7D1"/><stop offset="1" stop-color="#7C8596"/></linearGradient>
+    <linearGradient id="pgSteelV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8A93A3"/><stop offset=".45" stop-color="#E7EBF0"/><stop offset="1" stop-color="#7C8596"/></linearGradient>
+    <linearGradient id="pgWood" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9C6B3A"/><stop offset=".5" stop-color="#D3A167"/><stop offset="1" stop-color="#8F5F31"/></linearGradient>
+    <linearGradient id="pgBoard" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DCC7A0"/><stop offset="1" stop-color="#CDB68C"/></linearGradient>
+  </defs>
+  <rect width="980" height="380" fill="url(#pgBoard)"/>
+  <g fill="#8F7A55" opacity=".75">${Array.from({ length: 15 }, (_, r) => Array.from({ length: 41 }, (_, c) => `<circle cx="${18 + c * 23.6}" cy="${18 + r * 24}" r="3"/>`).join('')).join('')}</g>
+  <rect width="980" height="380" fill="none" stroke="#A88C5E" stroke-width="12"/>
+  <g stroke="#5B6475" stroke-width="5" stroke-linecap="round" fill="none">${[60, 150, 175, 200, 300, 335, 370, 455, 540, 620, 718, 800, 880, 935].map(x => `<path d="M${x} 30 v14 q0 6 6 6"/>`).join('')}</g>
+  <!-- claw hammer -->
+  <g transform="translate(60 52)"><rect x="-7" y="22" width="14" height="190" rx="6" fill="url(#pgWood)" stroke="#5E3F1F" stroke-width="2"/><path d="M-8 150 h16 M-8 162 h16" stroke="#5E3F1F" stroke-width="2" opacity=".5"/>
+    <path d="M-34 4 H22 Q30 4 30 12 V26 Q30 30 26 30 H-6 Q-12 30 -12 24 Z" fill="url(#pgSteelV)" stroke="#39404F" stroke-width="2"/><path d="M22 6 Q48 -4 54 22 Q42 12 30 16" fill="url(#pgSteel)" stroke="#39404F" stroke-width="2"/></g>
+  <!-- screwdriver set -->
+  ${[['#E0364F', 150, 160], ['#E8A132', 175, 175], ['#1F6FEB', 200, 150]].map(([c, x, l]) => `<g transform="translate(${x} 56)"><rect x="-9" y="0" width="18" height="70" rx="7" fill="${c}" stroke="#1B1F27" stroke-width="2"/><path d="M-4 8 v54 M0 8 v54 M4 8 v54" stroke="rgba(255,255,255,.35)" stroke-width="2"/><rect x="-6" y="68" width="12" height="8" fill="#39404F"/><rect x="-3" y="76" width="6" height="${l}" fill="url(#pgSteel)" stroke="#5B6475" stroke-width="1"/><path d="M-3 ${76 + +l} L3 ${76 + +l} L1 ${86 + +l} L-1 ${86 + +l} Z" fill="#7C8596"/></g>`).join('')}
+  <!-- combination wrenches -->
+  ${[[300, 170, 13], [335, 200, 15], [370, 230, 17]].map(([x, l, r]) => `<g transform="translate(${x} 50)"><path d="M-6 ${r} L6 ${r} L5 ${l - r} L-5 ${l - r} Z" fill="url(#pgSteel)" stroke="#39404F" stroke-width="1.6"/><circle cy="${r - 2}" r="${r}" fill="url(#pgSteel)" stroke="#39404F" stroke-width="1.6"/><circle cy="${r - 2}" r="${r * 0.48}" fill="#CDB68C" stroke="#39404F" stroke-width="1.4"/><path d="M${-r} ${l - 2} a${r} ${r} 0 1 0 ${2 * r} 0 l${-r * 0.45} ${-r * 0.2} v${r * 0.9} h${-r * 1.1} v${-r * 0.9} Z" fill="url(#pgSteel)" stroke="#39404F" stroke-width="1.6"/></g>`).join('')}
+  <!-- pliers (blue grips) and flush cutters (green grips) -->
+  ${[[455, '#1F6FEB', 0], [540, '#12A150', 1]].map(([x, c, cut]) => `<g transform="translate(${x} 52)"><path d="M-10 4 Q-14 30 -6 52 L6 52 Q14 30 10 4 Z" fill="url(#pgSteel)" stroke="#39404F" stroke-width="2"/>${cut ? '<path d="M-2 6 L0 40 L2 6" stroke="#39404F" stroke-width="1.5" fill="none"/>' : '<path d="M-6 14 h12 M-7 22 h14 M-7 30 h14" stroke="#5B6475" stroke-width="1.4"/>'}<circle cy="58" r="7" fill="#9199A8" stroke="#39404F" stroke-width="2"/><path d="M-6 62 Q-22 120 -26 196 Q-16 202 -10 196 Q-8 130 2 64 Z" fill="${c}" stroke="#1B1F27" stroke-width="2"/><path d="M6 62 Q22 120 26 196 Q16 202 10 196 Q8 130 -2 64 Z" fill="${c}" stroke="#1B1F27" stroke-width="2"/><path d="M-20 140 Q-18 170 -18 190 M20 140 Q18 170 18 190" stroke="rgba(255,255,255,.35)" stroke-width="3" fill="none"/></g>`).join('')}
+  <!-- digital calipers -->
+  <g transform="translate(620 50)"><rect x="-7" y="0" width="14" height="250" rx="2" fill="url(#pgSteel)" stroke="#39404F" stroke-width="1.6"/>${Array.from({ length: 40 }, (_, i) => `<path d="M-7 ${20 + i * 5.5} h${i % 5 ? 4 : 7}" stroke="#39404F" stroke-width=".8"/>`).join('')}
+    <path d="M-7 0 H-40 V12 L-14 22 V30 H-7 Z" fill="url(#pgSteelV)" stroke="#39404F" stroke-width="1.6"/><rect x="-20" y="70" width="40" height="64" rx="5" fill="#2A2F3A" stroke="#1B1F27" stroke-width="2"/><rect x="-14" y="78" width="28" height="18" rx="2" fill="#C9E7C2"/><text x="0" y="91" text-anchor="middle" font-size="9" font-family="monospace" fill="#1B1F27">25.40</text><circle cx="-7" cy="112" r="5" fill="#E0364F"/><circle cx="7" cy="112" r="5" fill="#9199A8"/>
+    <path d="M-7 134 H-34 V146 L-12 154 V162 H-7 Z" fill="url(#pgSteelV)" stroke="#39404F" stroke-width="1.6"/></g>
+  <!-- tape measure -->
+  <g transform="translate(718 96)"><rect x="-38" y="-38" width="76" height="76" rx="18" fill="#F4C274" stroke="#8A560A" stroke-width="2.5"/><circle r="22" fill="#E8A132" stroke="#8A560A" stroke-width="2"/><circle r="7" fill="#39404F"/><rect x="34" y="16" width="34" height="10" fill="#FDECCC" stroke="#8A560A" stroke-width="1.5"/><path d="M42 16 v4 M48 16 v6 M54 16 v4 M60 16 v6" stroke="#8A560A" stroke-width="1"/><rect x="-38" y="28" width="76" height="10" rx="3" fill="#39404F"/></g>
+  <!-- hex key set -->
+  <g transform="translate(800 56)">${[0, 1, 2, 3, 4, 5].map(i => `<path d="M${-28 + i * 11} 0 V${120 + i * 14} q0 6 6 6 H${-8 + i * 11}" stroke="url(#pgSteel)" stroke-width="${3 + i * 0.6}" fill="none" stroke-linecap="round"/>`).join('')}<rect x="-34" y="18" width="70" height="26" rx="4" fill="#E0364F" stroke="#1B1F27" stroke-width="2"/></g>
+  <!-- print-removal spatula and utility knife -->
+  <g transform="translate(880 50)"><rect x="-9" y="0" width="18" height="96" rx="6" fill="#1F6FEB" stroke="#1B1F27" stroke-width="2"/><path d="M-12 96 H12 L18 190 Q0 200 -18 190 Z" fill="url(#pgSteel)" stroke="#39404F" stroke-width="2"/></g>
+  <g transform="translate(935 54)"><path d="M-10 0 H10 L12 120 H-12 Z" fill="#E8A132" stroke="#1B1F27" stroke-width="2"/><rect x="-12" y="30" width="24" height="14" fill="#39404F"/><path d="M-6 120 L6 120 L10 150 L-8 142 Z" fill="url(#pgSteel)" stroke="#39404F" stroke-width="1.6"/></g>`);
 
 const WHITEBOARD = svg(820, 380, `<rect width="820" height="380" rx="6" fill="#ECEEF2"/><rect x="12" y="12" width="796" height="346" rx="3" fill="#FFFFFF"/>
   <rect x="300" y="358" width="220" height="12" rx="3" fill="#C2C7D1"/>
@@ -164,7 +181,9 @@ const WHITEBOARD = svg(820, 380, `<rect width="820" height="380" rx="6" fill="#E
 /** Workshop desk: plywood top on a drawer pedestal + steel legs. `side` mirrors the layout. */
 function deskFrame(side: 1 | -1, labels: string[]) {
   const pedX = -195 * side, legX = 275 * side;
-  return G(at(0, -287, 0), box(600, 26, 300, { front: PLY_EDGE, top: PLY_TOP, side: PLY_EDGE })) +
+  // soft contact shadow on the floor under the desk
+  return P(720, 420, `${at(0, -1, 0)} rotateX(90deg)`, 'background:radial-gradient(closest-side,rgba(7,9,14,.5),rgba(7,9,14,.18) 70%,rgba(7,9,14,0));') +
+    G(at(0, -287, 0), box(600, 26, 300, { front: PLY_EDGE, top: PLY_TOP, side: PLY_EDGE })) +
     G(at(pedX, -137, 0), box(190, 274, 280, { front: CABINET, side: CABINET + shade(.1), frontInner: DRAWERS(labels) })) +
     G(at(legX, -137, 125), box(20, 274, 20, { front: STEEL })) +
     G(at(legX, -137, -125), box(20, 274, 20, { front: STEEL })) +
@@ -249,6 +268,16 @@ const PLANT = svg(170, 330, `<path d="M85 210 C60 150 40 120 14 112 C34 150 52 1
   <path d="M38 214 H132 L122 326 H48 Z" fill="#ECEEF2" stroke="#39404F" stroke-width="3" stroke-linejoin="round"/>
   ${Array.from({ length: 14 }, (_, i) => `<path d="M${39 + i * 0.7} ${222 + i * 7.4} H${131 - i * 0.7}" stroke="#C2C7D1" stroke-width="1"/>`).join('')}
   <path d="M34 206 H136 V220 H34 Z" fill="#01CBFE" stroke="#39404F" stroke-width="3" stroke-linejoin="round"/>`);
+// Finished prints for the wall shelves either side of Mike (each drawn with layer lines, like real FDM prints).
+const LAYERS = (x: number, y: number, w: number, h: number, c = 'rgba(0,0,0,.13)') => Array.from({ length: Math.floor(h / 3) }, (_, i) => `<path d="M${x} ${y + i * 3} h${w}" stroke="${c}" stroke-width=".8"/>`).join('');
+const PRINT = {
+  benchy: svg(110, 70, `<path d="M4 44 L104 44 L92 64 L16 64 Z" fill="#E8A132" stroke="#8A560A" stroke-width="2.5"/><path d="M14 44 L26 18 L72 18 L72 44 Z" fill="#F4C274" stroke="#8A560A" stroke-width="2.5"/><rect x="34" y="24" width="12" height="11" rx="2" fill="#8A560A"/><rect x="52" y="24" width="12" height="11" rx="2" fill="#8A560A"/><path d="M68 18 V2 H84 V44" fill="#F4C274" stroke="#8A560A" stroke-width="2.5"/>${LAYERS(8, 20, 92, 44)}`),
+  vase: svg(64, 110, `<path d="M8 108 Q-2 60 18 28 Q24 16 20 4 H44 Q40 16 46 28 Q66 60 56 108 Z" fill="#01CBFE" stroke="#006B90" stroke-width="2.5"/>${Array.from({ length: 34 }, (_, i) => `<path d="M${10 + Math.sin(i / 3) * 3} ${8 + i * 3} q22 ${i % 2 ? 2 : -2} 44 0" stroke="rgba(0,0,0,.14)" stroke-width=".8" fill="none"/>`).join('')}`),
+  gears: svg(120, 90, [[42, 48, 32, '#1F6FEB', 0], [92, 60, 20, '#45D4FF', 15]].map(([cx, cy, r, c, rot]) => `<g transform="translate(${cx} ${cy})">${Array.from({ length: 12 }, (_, i) => `<rect x="-4.5" y="${-(+r) - 8}" width="9" height="11" rx="1" fill="${c}" stroke="#0A48AB" stroke-width="1.2" transform="rotate(${i * 30 + +rot})"/>`).join('')}<circle r="${r}" fill="${c}" stroke="#0A48AB" stroke-width="2.5"/><circle r="${+r * 0.32}" fill="#ECEEF2" stroke="#0A48AB" stroke-width="2"/></g>`).join('')),
+  planter: svg(80, 100, `<path d="M40 44 C32 18 14 8 4 12 C16 26 28 38 38 46 Z M40 44 C48 18 66 6 76 10 C64 26 52 38 42 46 Z M40 44 C36 22 38 4 44 -4 C50 12 48 30 42 46 Z" fill="#4F9A63" stroke="#2E5E3E" stroke-width="1.8"/><path d="M8 44 H72 L64 98 H16 Z" fill="#FFFFFF" stroke="#39404F" stroke-width="2.5"/>${LAYERS(10, 47, 60, 50)}<path d="M8 44 H72" stroke="#01CBFE" stroke-width="6"/>`),
+  dragon: svg(130, 70, `<path d="M8 62 Q2 34 30 30 Q56 26 66 42 Q76 56 98 48 Q114 42 118 26" stroke="#C026D3" stroke-width="16" fill="none" stroke-linecap="round"/>${Array.from({ length: 10 }, (_, i) => `<path d="M${12 + i * 10} ${56 - Math.sin(i / 1.7) * 16} l5 -11 l5 11" fill="#E879F9" stroke="#86198F" stroke-width="1"/>`).join('')}<path d="M112 32 L128 18 L124 36 Z" fill="#C026D3" stroke="#86198F" stroke-width="1.5"/><circle cx="121" cy="27" r="2.4" fill="#1B1F27"/>`),
+  stand: svg(80, 90, `<path d="M4 88 H76 L66 74 H26 L48 4 H34 L8 74 Z" fill="#2A2F3A" stroke="#1B1F27" stroke-width="2.5"/>${LAYERS(6, 6, 68, 80, 'rgba(255,255,255,.07)')}<rect x="38" y="6" width="30" height="54" rx="5" fill="#1B1F27" stroke="#39404F" stroke-width="2" transform="rotate(18 53 33)"/><rect x="42" y="12" width="22" height="40" rx="2" fill="#0B5AD6" transform="rotate(18 53 33)"/>`),
+};
 const PENDANT = svg(120, 70, `<path d="M58 0 H62 V18 H58 Z" fill="#1B1F27"/><path d="M20 58 Q22 22 60 18 Q98 22 100 58 Z" fill="#1B1F27" stroke="#39404F" stroke-width="2"/>
   <path d="M28 50 Q34 28 60 25" stroke="rgba(255,255,255,.18)" stroke-width="3" fill="none"/><ellipse cx="60" cy="58" rx="40" ry="7" fill="#FFF6DC"/>`);
 
@@ -275,8 +304,8 @@ const PILASTER = (side: 'left' | 'right') => `<div style="position:absolute;${si
 const ROOM_W = 1900, ROOM_D = 1500, FRONT = 450, FLOOR = 330, CEIL = -470, H = FLOOR - CEIL;
 const DEPTH = ROOM_D + FRONT, MID_Z = (FRONT - ROOM_D) / 2; // the room runs from z = FRONT (behind the camera) to the back wall
 export const DESKS = {
-  make: { x: -470, z: -560, ry: 25 },
-  solve: { x: 470, z: -560, ry: -25 },
+  make: { x: -560, z: -400, ry: 25 },
+  solve: { x: 560, z: -400, ry: -25 },
 } as const;
 
 function room() {
@@ -294,7 +323,7 @@ function room() {
   return [
     // floor: polished concrete with soft light pools, and a navy rug (the gallery's carpet) under the work area
     P(ROOM_W, DEPTH, `${at(0, FLOOR, MID_Z)} rotateX(90deg)`,
-      'background:radial-gradient(ellipse 380px 300px at 25% 50%,rgba(255,236,200,.22),rgba(255,236,200,0)),radial-gradient(ellipse 380px 300px at 75% 50%,rgba(255,236,200,.22),rgba(255,236,200,0)),radial-gradient(ellipse 700px 500px at 30% 70%,rgba(255,255,255,.05),rgba(255,255,255,0)),radial-gradient(ellipse 600px 420px at 75% 30%,rgba(0,0,0,.08),rgba(0,0,0,0)),linear-gradient(90deg,rgba(255,255,255,.06) 2px,transparent 2px) 0 0/475px 100%,linear-gradient(rgba(255,255,255,.06) 2px,transparent 2px) 0 0/100% 390px,linear-gradient(#59616F,#6B7383);',
+      'background:radial-gradient(ellipse 380px 300px at 25% 50%,rgba(255,236,200,.22),rgba(255,236,200,0)),radial-gradient(ellipse 380px 300px at 75% 50%,rgba(255,236,200,.22),rgba(255,236,200,0)),radial-gradient(ellipse 700px 500px at 30% 70%,rgba(255,255,255,.05),rgba(255,255,255,0)),radial-gradient(ellipse 600px 420px at 75% 30%,rgba(0,0,0,.08),rgba(0,0,0,0)),linear-gradient(90deg,rgba(255,255,255,.06) 2px,transparent 2px) 0 0/475px 100%,linear-gradient(rgba(255,255,255,.06) 2px,transparent 2px) 0 0/100% 390px,linear-gradient(#59616F,#6B7383);box-shadow:inset 0 70px 60px -20px rgba(7,9,14,.45),inset 80px 0 70px -30px rgba(7,9,14,.4),inset -80px 0 70px -30px rgba(7,9,14,.4);',
       `<div style="position:absolute;left:${ex(-720)}px;width:1440px;top:${floorY(-1060)}px;height:1300px;box-sizing:border-box;border:30px solid #0E2F66;background:url(${CARPET}) 0 0/152px 152px,radial-gradient(circle,rgba(1,203,254,.3) 0 2.5px,rgba(1,203,254,0) 3.5px) 0 0/40px 40px,repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 1.5px,rgba(255,255,255,0) 1.5px 28.28px),repeating-linear-gradient(-45deg,rgba(255,255,255,.07) 0 1.5px,rgba(255,255,255,0) 1.5px 28.28px),#0A48AB;box-shadow:inset 0 0 0 3px rgba(232,161,50,.75),inset 0 0 0 10px #0C3A85,inset 0 0 0 12px rgba(1,203,254,.7),0 0 10px 4px rgba(0,0,0,.35);"></div>`),
     // ceiling: coffers, a laylight over Mike, recessed downlights
     P(ROOM_W, DEPTH, `${at(0, CEIL, MID_Z)} rotateX(-90deg)`, 'background:#262B35;',
@@ -304,8 +333,8 @@ function room() {
       '<div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.4),rgba(0,0,0,0) 6%,rgba(0,0,0,0) 94%,rgba(0,0,0,.4));"></div>'),
     // back wall: two framed blueprints (clear of Mike), marble pilasters
     P(ROOM_W, H, at(0, (FLOOR + CEIL) / 2, -ROOM_D), WALL_BG,
-      wallDressing(ROOM_W, [ex(-430), ex(430)], 4,
-        framed(ex(-430) - 215, 130, 430, 330, GEAR_PRINT) + framed(ex(430) - 215, 130, 430, 330, BRACKET_PRINT) + PILASTER('left') + PILASTER('right'))),
+      wallDressing(ROOM_W, [ex(-690), ex(-340), ex(340), ex(690)], 4,
+        framed(ex(-690) - 175, 140, 350, 270, GEAR_PRINT) + framed(ex(690) - 175, 140, 350, 270, BRACKET_PRINT) + PILASTER('left') + PILASTER('right'))),
     // side walls: framed pegboard of tools (left), whiteboard (right)
     sideWall(-ROOM_W / 2, 90, [FRONT + 520, FRONT + 1060],
       `<div style="position:absolute;left:${300 + FRONT}px;top:110px;width:980px;height:380px;box-shadow:0 12px 20px rgba(14,18,26,.3)">${PEGBOARD}</div>`),
@@ -314,8 +343,15 @@ function room() {
     // storage cabinet along the left wall, filament rack and plants in the corners
     G(at(-ROOM_W / 2 + 60, 210, -900), box(120, 240, 700, { front: 'background:#4B5263;', top: PLY_TOP, sideInner: CABINET_DOORS })),
     G(at(-790, FLOOR - 215, -1430), box(240, 430, 90, { front: 'background:#39404F;', top: 'background:#2A2F3A;', frontInner: FILAMENT_RACK })),
-    P(170, 330, at(800, FLOOR - 165, -1380), '', PLANT),
-    P(150, 291, at(-820, FLOOR - 146, -330), '', PLANT),
+    // floating shelves of finished prints either side of Mike
+    [[-340, -270, [['benchy', 154, 98, -90], ['vase', 73, 126, 78]]], [-340, -80, [['gears', 157, 118, -64], ['planter', 90, 112, 92]]],
+     [340, -270, [['dragon', 174, 92, -34], ['stand', 90, 101, 110]]], [340, -80, [['planter', 90, 112, -100], ['benchy', 140, 90, 54]]]]
+      .map(([x, y, items]) => G(at(+x, +y, -ROOM_D + 38), box(360, 14, 72, { front: PLY_EDGE, top: PLY_TOP })) +
+        (items as [keyof typeof PRINT, number, number, number][]).map(([k, w, h, dx]) => P(w, h, at(+x + dx, +y - 7 - h / 2, -ROOM_D + 44), 'filter:drop-shadow(0 6px 4px rgba(14,18,26,.25));', PRINT[k])).join('')).join(''),
+    P(330, 170, `${at(-790, FLOOR - 1, -1400)} rotateX(90deg)`, 'background:radial-gradient(closest-side,rgba(7,9,14,.45),rgba(7,9,14,0));'),
+    P(260, 820, `${at(-ROOM_W / 2 + 70, FLOOR - 1, -900)} rotateX(90deg)`, 'background:radial-gradient(closest-side,rgba(7,9,14,.4),rgba(7,9,14,0));'),
+    P(150, 291, at(-835, FLOOR - 146, -260), '', PLANT),
+    P(150, 291, at(835, FLOOR - 146, -260), '', PLANT),
     // pendant lamps over the desks
     pendant(DESKS.make.x, DESKS.make.z), pendant(DESKS.solve.x, DESKS.solve.z),
   ].join('');

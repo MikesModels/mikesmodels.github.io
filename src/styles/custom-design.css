@@ -21,7 +21,9 @@
 .cd-value{font:600 14px/1 var(--font-display)}
 .is-open .cd-title,.is-open .cd-bubble{opacity:0;pointer-events:none}
 
-.cd-bubble{position:absolute;z-index:6;left:50%;bottom:60%;transform:translateX(-50%);width:min(300px,34vw);padding:14px 16px 16px;gap:6px;transition:opacity 240ms var(--ease-out)}
+/* Starts where placeBubble() will put it — above Mike's head, which projects 195.5 stage px above the stage centre
+   at the stage's cover scale — so it doesn't move when the script runs. */
+.cd-bubble{position:absolute;z-index:6;left:50%;bottom:calc(50% + 195.5 * max(100vw / 1600, 100vh / 900) + 10px);bottom:calc(50% + 195.5 * max(100vw / 1600, 100dvh / 900) + 10px);transform:translateX(-50%);width:min(300px,34vw);padding:14px 16px 16px;gap:6px;transition:opacity 240ms var(--ease-out)}
 .cd-bubble-tail{position:absolute;left:50%;bottom:-9px;margin-left:-7px;width:14px;height:14px;background:#FFFFFF;border-right:2px solid var(--slate-700);border-bottom:2px solid var(--slate-700);transform:rotate(45deg)}
 
 /* ---- The two choices ---- */
@@ -32,18 +34,18 @@
 .cd-sign{--sign-lift:rgba(0,0,0,.22);gap:12px;padding:20px 18px 22px;text-decoration:none}
 .cd-sign .sign-tile{width:56px;height:56px}
 .cd-sign .sign-tile .icon{width:30px;height:30px}
-.desk-q{font:600 19px/1.25 var(--font-display);color:var(--slate-700);text-align:center;text-wrap:balance}
+.desk-q{font:700 19px/1.15 var(--font-display);letter-spacing:var(--ls-heading);color:var(--slate-900);text-align:center;text-wrap:balance}
 .desk-a{font:700 30px/1.05 var(--font-display);letter-spacing:var(--ls-display);color:var(--blue-600);text-align:center;text-wrap:balance}
 
 /* In the scene: a placard clipped to the desk's front edge (sizes are world units). */
 /* The wrapper is tall enough to hold the arrow too: in a 3D scene, content outside an element's box
    can be drawn behind nearer props. */
-.cd-sign-wrap.in-scene{position:absolute;left:-205px;top:-238px;width:410px;height:366px;justify-content:flex-end}
-.cd-sign-wrap.in-scene .cd-sign{height:256px;justify-content:center;gap:12px;padding:18px 22px}
-.cd-sign-wrap.in-scene .desk-q{font-size:23px}
-.cd-sign-wrap.in-scene .desk-a{font-size:37px}
-.cd-sign-wrap.in-scene .sign-tile{width:64px;height:64px}
-.cd-sign-wrap.in-scene .sign-tile .icon{width:34px;height:34px}
+.cd-sign-wrap.in-scene{position:absolute;left:-225px;top:-262px;width:450px;height:390px;justify-content:flex-end}
+.cd-sign-wrap.in-scene .cd-sign{height:280px;justify-content:center;gap:10px;padding:16px 22px}
+.cd-sign-wrap.in-scene .desk-q{font-size:33px}
+.cd-sign-wrap.in-scene .desk-a{font-size:29px}
+.cd-sign-wrap.in-scene .sign-tile{width:54px;height:54px}
+.cd-sign-wrap.in-scene .sign-tile .icon{width:30px;height:30px}
 .cd-sign-wrap.in-scene .cd-arrow{top:4px;bottom:auto;width:66px;height:80px;margin-left:-33px}
 .cd-sign-wrap.in-scene .cd-sign::before,.cd-sign-wrap.in-scene .cd-sign::after{content:"";position:absolute;top:-16px;width:16px;height:26px;border-radius:3px;background:#9199A8;border:2px solid #39404F}
 .cd-sign-wrap.in-scene .cd-sign::before{left:54px}.cd-sign-wrap.in-scene .cd-sign::after{right:54px}
@@ -56,8 +58,8 @@
 .cd-choices .cd-sign{height:100%;gap:6px;padding:12px 10px 14px}
 .cd-choices .sign-tile{width:40px;height:40px}
 .cd-choices .sign-tile .icon{width:22px;height:22px}
-.cd-choices .desk-q{font-size:13px}
-.cd-choices .desk-a{font-size:17px}
+.cd-choices .desk-q{font-size:15px}
+.cd-choices .desk-a{font-size:15px}
 .is-open .cd-choices{opacity:0;pointer-events:none}
 
 /* ---- Form sheets ---- */

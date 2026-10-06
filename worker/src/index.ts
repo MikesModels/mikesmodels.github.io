@@ -24,7 +24,7 @@ type Review = { id: string; name: string; product: string; rating: number; comme
 
 // Same required fields as src/data/form-specs.ts — never trust the browser alone.
 const REQUIRED: Record<FormType, string[]> = {
-  make: ['name', 'email', 'title', 'description', 'dimensions', 'quantity'],
+  make: ['name', 'email', 'title', 'description'],
   solve: ['name', 'email', 'problem', 'purpose', 'use'],
   review: ['name', 'email', 'product', 'rating', 'comment'],
 };
