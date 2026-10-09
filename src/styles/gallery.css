@@ -41,33 +41,23 @@
 .g-plaque-price span:first-child{font:700 11px/1 var(--font-display);letter-spacing:.14em;color:#9199A8}
 .g-plaque-price span:last-child{font:700 26px/1 var(--font-display);font-variant-numeric:tabular-nums;color:#FFFFFF}
 
-/* Close-up menu: colour picker (Amazon-style swatches), order view, coming soon */
-.g-panel-card[hidden],.g-shop[hidden],.g-soon[hidden],.g-colours[hidden]{display:none}
-.g-shop{display:flex;flex-direction:column;gap:14px}
-.g-colours{margin:0;padding:0;border:0;min-width:0}
-.g-colours legend{padding:0;margin-bottom:8px;font:500 15px/1.3 var(--font-body);color:var(--slate-600)}
-.g-colours legend strong{font-weight:700;color:var(--slate-900)}
-.g-swatches{display:flex;flex-wrap:wrap;gap:6px}
-.g-swatch-opt{position:relative;display:block;padding:3px;border:1px solid #C2C7D1;border-radius:6px;background:#FFFFFF;cursor:pointer;transition:border-color 120ms var(--ease-out),box-shadow 120ms var(--ease-out)}
-.g-swatch-opt:hover{border-color:var(--slate-500,#687082)}
-.g-swatch-opt input{position:absolute;inset:0;margin:0;opacity:0;cursor:pointer}
-.g-swatch-opt:has(input:checked){border-color:var(--blue-600);box-shadow:0 0 0 1px var(--blue-600)}
-.g-swatch-opt:has(input:focus-visible){box-shadow:var(--focus-ring)}
+/* Close-up menu: colour options (display only, Amazon-style swatches), Buy on Etsy, coming soon */
+.g-shop[hidden],.g-soon[hidden],.g-colours[hidden]{display:none}
+.g-shop{display:flex;flex-direction:column;gap:12px}
+.g-colours-h{margin:0 0 8px;font:700 15px/1.3 var(--font-body);color:var(--slate-900)}
+.g-colours-h span{font-weight:500;color:var(--slate-600)}
+.g-swatches{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.g-swatch-opt{padding:3px;border:1px solid #C2C7D1;border-radius:6px;background:#FFFFFF;transition:border-color 120ms var(--ease-out)}
+.g-swatch-opt:hover{border-color:#687082}
 .g-swatch{display:block;width:32px;height:32px;border-radius:3px;box-shadow:inset 0 0 0 1px rgba(27,31,39,.18)}
 .g-note{margin:8px 0 0;font:500 13px/1.45 var(--font-body);color:var(--slate-600)}
-.g-order-btn{width:100%}
+.g-etsy-btn{width:100%;margin-top:4px}
+.g-leave{margin:-4px 0 0;text-align:center;font:500 12px/1.4 var(--font-body);color:var(--slate-600)}
 .g-soon{display:flex;flex-direction:column;gap:12px}
 .g-soon p{margin:0;font:500 15px/1.5 var(--font-body);color:var(--slate-700)}
 .g-ask{display:flex;gap:8px;align-items:flex-start;margin:0;padding:10px 12px;border-radius:3px;background:#F2F4F7;font:500 14px/1.45 var(--font-body);color:var(--slate-700)}
 .g-ask svg{flex:none;margin-top:2px;color:var(--blue-600)}
 .g-ask a{font-weight:700;color:var(--blue-600)}
-.g-back-link{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;padding:4px 0;border:0;background:none;font:600 14px/1 var(--font-display);color:var(--blue-600);cursor:pointer}
-.g-back-link:hover{text-decoration:underline}
-.g-order-sum{display:flex;align-items:center;gap:12px;padding:12px;border-radius:3px;background:#39404F;color:#FFFFFF}
-.g-order-sum h2{margin:0;font:700 20px/1.15 var(--font-display);letter-spacing:var(--ls-heading)}
-.g-order-sum p{margin:4px 0 0;font:500 14px/1.4 var(--font-body);color:#DCDFE6}
-.g-swatch--sum{flex:none;width:44px;height:44px;box-shadow:0 0 0 2px #FFFFFF}
-.g-swatch--sum[hidden]{display:none}
 
 /* Case product slot */
 .g-photo{display:block;width:100%;height:100%;object-fit:contain}

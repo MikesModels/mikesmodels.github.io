@@ -10,6 +10,15 @@ SITE_ORIGINS = "https://mikesmodels.github.io,http://localhost:5173,http://local
 SITE_URL = "https://mikesmodels.github.io"
 GITHUB_REPO = "MikesModels/mikesmodels.github.io"
 REVIEWS_PATH = "src/data/reviews.json"
+TIME_ZONE = "America/New_York"
+
+# Etsy click log (product + time only). Summary email at 13:00 UTC (9 am Eastern in summer, 8 am in winter).
+[[kv_namespaces]]
+binding = "CLICKS"
+id = "PENDING"
+
+[triggers]
+crons = ["0 13 * * *"]
 
 # Secrets — never put these in this file. Set each one with:  npx wrangler secret put NAME
 #   RESEND_API_KEY    (resend.com → API Keys)

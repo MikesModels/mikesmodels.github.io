@@ -15,6 +15,15 @@ export async function sendForm(data: FormData): Promise<void> {
   }
 }
 
+/** Counts a "Buy on Etsy" click (product + case only; nothing about the visitor). Never blocks the link. */
+export function trackEtsyClick(product: string, caseNum: string) {
+  if (!ENDPOINT) return;
+  try {
+    // text/plain keeps it a simple request (no CORS preflight); sendBeacon survives the tab switching to Etsy.
+    navigator.sendBeacon(ENDPOINT + '/click', new Blob([JSON.stringify({ product, case: caseNum })], { type: 'text/plain' }));
+  } catch { /* counting is best-effort */ }
+}
+
 // ---- Cloudflare Turnstile (invisible spam check), loaded only when a form is first shown ----
 type Turnstile = { render(el: HTMLElement, o: Record<string, unknown>): string; reset(id: string): void; getResponse(id: string): string | undefined };
 declare global { interface Window { turnstile?: Turnstile } }

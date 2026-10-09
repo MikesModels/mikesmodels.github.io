@@ -3,6 +3,9 @@
 //   GET  /approve  — from the "Approve & publish" button in a review email: shows a confirmation page.
 //   POST /approve  — publishes the review: adds it to src/data/reviews.json in the site repo, which redeploys the site.
 // The approve link is signed, and publishing needs a button press on the page, so email link-scanners can't approve.
+//   POST /click    — the gallery's "Buy on Etsy" button: logs product + time (nothing about the visitor).
+//   GET  /clicks   — Mike's private click log (signed link, sent in the click summary emails).
+//   daily cron     — emails Mike a summary of the last 24 hours of Etsy clicks, if there were any.
 
 export interface Env {
   TO_EMAIL: string;
@@ -16,9 +19,11 @@ export interface Env {
   GITHUB_TOKEN?: string;
   TURNSTILE_SECRET?: string;
   DEV_MODE?: string; // "1" locally: no email is sent; GET /dev/last shows what would have been
+  TIME_ZONE: string; // Mike's time zone for click times, e.g. America/New_York
+  CLICKS: KVNamespace; // Etsy click log: key c:<ISO time>:<random>, metadata { p: product, c: case }
 }
 
-type FormType = 'make' | 'solve' | 'review' | 'order';
+type FormType = 'make' | 'solve' | 'review';
 type Answer = { name: string; label: string; value: string };
 type Review = { id: string; name: string; product: string; rating: number; comment: string; date: string };
 
@@ -27,7 +32,6 @@ const REQUIRED: Record<FormType, string[]> = {
   make: ['name', 'email', 'title', 'description'],
   solve: ['name', 'email', 'problem', 'purpose', 'use'],
   review: ['name', 'email', 'product', 'rating', 'comment'],
-  order: ['product', 'colour', 'name', 'email', 'quantity'],
 };
 const FILE_EXT = /\.(jpe?g|png|webp|gif|heic|heif|pdf|stl|3mf|step|stp|obj)$/i;
 const MAX_FILES = 6, MAX_EACH = 8 * 1024 * 1024, MAX_TOTAL = 20 * 1024 * 1024;
@@ -46,6 +50,10 @@ export default {
         if (!cors['Access-Control-Allow-Origin']) return json({ error: 'Not allowed from this site.' }, 403, cors);
         return await submit(req, env, url, cors);
       }
+      if (url.pathname === '/click' && req.method === 'POST') return await logClick(req, env, cors);
+      if (url.pathname === '/clicks' && req.method === 'GET') return await clicksPage(url, env);
+      if (url.pathname === '/clicks/send-link' && req.method === 'POST') return await sendClicksLink(env);
+      if (url.pathname === '/dev/summary' && env.DEV_MODE === '1') { await dailySummary(env); return json({ outbox: devOutbox }, 200, {}); }
       if (url.pathname === '/approve' && req.method === 'GET') return await approvePage(url, env);
       if (url.pathname === '/approve' && req.method === 'POST') return await approve(req, env);
       if (url.pathname === '/dev/last' && env.DEV_MODE === '1') return json({ outbox: devOutbox, reviews: devReviews }, 200, {});
@@ -56,7 +64,89 @@ export default {
       return json({ error: 'Something went wrong on my end.' }, 500, cors);
     }
   },
+  async scheduled(_ctl: ScheduledController, env: Env) {
+    await dailySummary(env);
+  },
 };
+
+// ------------------------------------------------------------------ Etsy clicks
+type Click = { t: string; p: string; c: string };
+
+async function logClick(req: Request, env: Env, cors: Record<string, string>) {
+  // Only count clicks from the site itself (the browser sends Origin with the beacon).
+  if (!cors['Access-Control-Allow-Origin']) return new Response(null, { status: 403 });
+  let body: { product?: unknown; case?: unknown };
+  try { body = JSON.parse(await req.text()); } catch { return new Response(null, { status: 400, headers: cors }); }
+  const p = String(body.product ?? '').slice(0, 80).trim(), c = String(body.case ?? '').replace(/\D/g, '').slice(0, 3);
+  if (!p) return new Response(null, { status: 400, headers: cors });
+  const t = new Date().toISOString();
+  await env.CLICKS.put(`c:${t}:${crypto.randomUUID().slice(0, 6)}`, '', { metadata: { p, c } });
+  return new Response(null, { status: 204, headers: cors });
+}
+
+async function readClicks(env: Env, prefix = 'c:'): Promise<Click[]> {
+  const out: Click[] = [];
+  let cursor: string | undefined;
+  do {
+    const page: KVNamespaceListResult<{ p: string; c: string }> = await env.CLICKS.list({ prefix, cursor });
+    for (const k of page.keys) out.push({ t: k.name.split(':').slice(1, -1).join(':'), p: k.metadata?.p ?? '?', c: k.metadata?.c ?? '' });
+    cursor = page.list_complete ? undefined : page.cursor;
+  } while (cursor && out.length < 20000);
+  return out;
+}
+
+const WORKER_ORIGIN = 'https://mikes-models-forms.mikes-models-forms.workers.dev';
+const clicksUrl = async (env: Env) => `${WORKER_ORIGIN}/clicks?k=${await sign('clicks', env.APPROVE_SECRET!)}`;
+const when = (iso: string, env: Env) => new Date(iso).toLocaleString('en-US', { timeZone: env.TIME_ZONE, month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+
+function clickTables(clicks: Click[], env: Env) {
+  const counts = new Map<string, number>();
+  clicks.forEach(c => counts.set(c.p, (counts.get(c.p) ?? 0) + 1));
+  const td = 'style="padding:6px 14px 6px 0;border-bottom:1px solid #DCDFE6"';
+  const byProduct = [...counts].sort((a, b) => b[1] - a[1]).map(([p, n]) => `<tr><td ${td}>${esc(p)}</td><td ${td}><strong>${n}</strong></td></tr>`).join('');
+  const list = [...clicks].reverse().slice(0, 500).map(c => `<tr><td ${td}>${when(c.t, env)}</td><td ${td}>${esc(c.p)}</td><td ${td}>${c.c ? 'Case ' + esc(c.c) : ''}</td></tr>`).join('');
+  return `<h2 style="font-size:17px;margin:20px 0 6px">By product</h2><table style="border-collapse:collapse">${byProduct}</table>
+    <h2 style="font-size:17px;margin:20px 0 6px">Every click, newest first</h2><table style="border-collapse:collapse">${list}</table>`;
+}
+
+async function clicksPage(url: URL, env: Env) {
+  if (!env.APPROVE_SECRET || url.searchParams.get('k') !== await sign('clicks', env.APPROVE_SECRET)) return page('Link not valid', '<p>Use the link from your Etsy clicks email.</p>', 403);
+  const clicks = await readClicks(env);
+  const body = clicks.length
+    ? `<p><strong>${clicks.length}</strong> click${clicks.length === 1 ? '' : 's'} on “Buy on Etsy” so far.</p>${clickTables(clicks, env)}`
+    : '<p>No one has clicked “Buy on Etsy” yet.</p>';
+  return page('Etsy button clicks', body);
+}
+
+async function sendEmail(env: Env, subject: string, html: string) {
+  if (!env.RESEND_API_KEY) { devOutbox = [{ subject, html }]; console.log('[dev] would send:', subject); return; }
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from: env.FROM_EMAIL, to: [env.TO_EMAIL], subject, html }),
+  });
+  if (!res.ok) console.error('Resend', res.status, await res.text());
+}
+
+const mailBox = (title: string, inner: string) => `<div style="font-family:Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.5;color:#39404F;max-width:640px"><div style="background:#0C3A85;color:#FFFFFF;padding:16px 20px;border-radius:4px 4px 0 0;font-size:20px;font-weight:700">${title}</div><div style="border:2px solid #39404F;border-top:0;padding:16px 20px;border-radius:0 0 4px 4px">${inner}</div></div>`;
+
+async function dailySummary(env: Env) {
+  const now = Date.now(), since = now - 24 * 3600 * 1000, day = (ms: number) => new Date(ms).toISOString().slice(0, 10);
+  const days = day(since) === day(now) ? [day(now)] : [day(since), day(now)];
+  const clicks = (await Promise.all(days.map(d => readClicks(env, `c:${d}`)))).flat().filter(c => Date.parse(c.t) >= since);
+  if (!clicks.length) return;
+  const n = clicks.length, s = n === 1 ? '' : 's';
+  await sendEmail(env, `Etsy clicks: ${n} in the last 24 hours`, mailBox(`${n} “Buy on Etsy” click${s} in the last 24 hours`,
+    `${clickTables(clicks, env)}<p style="margin-top:20px"><a href="${esc(await clicksUrl(env))}" style="color:#0B5AD6;font-weight:700">See every click so far</a> <span style="color:#687082;font-size:13px">(private link)</span></p>`));
+}
+
+// Emails Mike the private click-log link (it only ever goes to TO_EMAIL), at most once every 10 minutes.
+async function sendClicksLink(env: Env) {
+  if (await env.CLICKS.get('meta:link-sent')) return json({ ok: true }, 200, {});
+  await env.CLICKS.put('meta:link-sent', '1', { expirationTtl: 600 });
+  await sendEmail(env, 'Your Etsy click log link', mailBox('Your Etsy click log', `<p>This private link shows every “Buy on Etsy” click on your site: which product, and when.</p><p><a href="${esc(await clicksUrl(env))}" style="color:#0B5AD6;font-weight:700">Open the click log</a></p><p style="color:#687082;font-size:13px">You’ll also get a summary email on any day the button is clicked.</p>`));
+  return json({ ok: true }, 200, {});
+}
 
 // ------------------------------------------------------------------ submit
 async function submit(req: Request, env: Env, url: URL, cors: Record<string, string>) {
@@ -85,7 +175,7 @@ async function submit(req: Request, env: Env, url: URL, cors: Record<string, str
   const rating = form === 'review' ? parseInt(get('rating'), 10) : 0;
   if (form === 'review' && !(rating >= 1 && rating <= 5)) return json({ error: 'Pick a star rating.' }, 400, cors);
 
-  const files = form === 'review' || form === 'order' ? [] : fd.getAll('files').filter((f): f is File => typeof f !== 'string');
+  const files = form === 'review' ? [] : fd.getAll('files').filter((f): f is File => typeof f !== 'string');
   if (files.length > MAX_FILES) return json({ error: `Attach up to ${MAX_FILES} files.` }, 400, cors);
   let total = 0;
   for (const f of files) {
@@ -98,7 +188,6 @@ async function submit(req: Request, env: Env, url: URL, cors: Record<string, str
   const name = get('name'), edited = payload.edit ? 'Updated: ' : '';
   const subject = form === 'make' ? `${edited}New project (Make it): ${get('title')} — ${name}`
     : form === 'solve' ? `${edited}New project (Solve it) — ${name}`
-    : form === 'order' ? `${edited}New order: ${get('quantity')} × ${get('product')} in ${get('colour')} — ${name}`
     : `${edited}New review: ${'★'.repeat(rating)} ${get('product')} — ${name}`;
   let approveUrl = '';
   if (form === 'review') {
@@ -214,7 +303,7 @@ const stars = (n: number) => `<span style="color:#E8A132;font-size:20px;letter-s
 const reviewCard = (r: Review) => `<div class="card"><p><strong>${esc(r.name)}</strong> — ${esc(r.product)}</p><p>${stars(r.rating)}</p><p>${esc(r.comment)}</p></div>`;
 
 function emailHtml(form: FormType, ref: string, edit: boolean, answers: Answer[], fileNames: string[], approveUrl: string) {
-  const heading = form === 'make' ? 'New custom project — Make it' : form === 'solve' ? 'New custom project — Solve it' : form === 'order' ? 'New order request — confirm the total and payment with them' : 'New review to approve';
+  const heading = form === 'make' ? 'New custom project — Make it' : form === 'solve' ? 'New custom project — Solve it' : 'New review to approve';
   const rows = answers.filter(a => a.value).map(a => `<tr><td style="padding:8px 12px 8px 0;color:#687082;vertical-align:top;white-space:nowrap">${esc(a.label)}</td><td style="padding:8px 0;color:#1B1F27;white-space:pre-wrap">${esc(a.value)}</td></tr>`).join('');
   const button = approveUrl ? `<p style="margin:24px 0 8px"><a href="${esc(approveUrl)}" style="display:inline-block;padding:12px 20px;background:#1F6FEB;color:#FFFFFF;text-decoration:none;border-radius:3px;font-weight:700">Approve &amp; publish</a></p><p style="color:#687082;font-size:13px;margin:0">Opens a confirmation page — nothing goes live until you press Publish there. To reject, just ignore this email.</p>` : '';
   const files = fileNames.length ? `<p style="color:#39404F">Attached: ${fileNames.map(esc).join(', ')}</p>` : '';

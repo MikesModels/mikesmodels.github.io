@@ -1,16 +1,18 @@
 // Gallery products, in case order (case 01 = first on the left). Only list real, finished products:
 // every case without a product shows "Coming soon..." with TBD details.
 //
-// To add one, put its photo in src/assets/products/ and add an entry, e.g.
-//   { name: 'Flexi dragon', desc: 'Articulated, printed in one piece.', price: '$24.00', image: 'flexi-dragon.webp' },
+// To add one, put its photo in src/assets/products/ and add an entry with its Etsy listing, e.g.
+//   { name: 'Flexi dragon', desc: 'Articulated, printed in one piece.', price: '$24.00', image: 'flexi-dragon.webp',
+//     etsy: 'https://www.etsy.com/listing/123456789/flexi-dragon' },
 // `origin` (a line about where the design came from) is optional. Products get COLOURS below unless
-// they set their own `colours` (use [] for a product that only comes one way).
+// they set their own `colours` (use [] for a product that only comes one way). Sales happen on Etsy.
 export type Colour = { name: string; hex: string[] }; // one hex = solid, two or more = mixed
 export type Product = {
   name: string;
   desc: string;
   price: string;
   image: string;
+  etsy: string;
   origin?: string;
   colours?: Colour[];
 };
@@ -20,7 +22,7 @@ export const CASES = 12;
 
 export const PRODUCTS: Product[] = [];
 
-/** Default colour choices. Mike orders filament to match whatever the customer picks or asks for. */
+/** Default colour options shown on a product. Mike can order filament in other colours on request. */
 export const COLOURS: Colour[] = [
   { name: 'Black', hex: ['#1B1F27'] },
   { name: 'White', hex: ['#F4F5F7'] },
