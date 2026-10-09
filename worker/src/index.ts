@@ -3,9 +3,9 @@
 //   GET  /approve  — from the "Approve & publish" button in a review email: shows a confirmation page.
 //   POST /approve  — publishes the review: adds it to src/data/reviews.json in the site repo, which redeploys the site.
 // The approve link is signed, and publishing needs a button press on the page, so email link-scanners can't approve.
-//   POST /click    — the gallery's "Buy on Etsy" button: logs product + time (nothing about the visitor).
-//   GET  /clicks   — Mike's private click log (signed link, sent in the click summary emails).
-//   daily cron     — emails Mike a summary of the last 24 hours of Etsy clicks, if there were any.
+//   POST /click    — the gallery's "Buy on Etsy" button: logs product + time (nothing about the visitor)
+//                    and emails Mike straight away (subject "Etsy click: …", for his Gmail filter).
+//   GET  /clicks   — Mike's private click log (signed link, in every click email).
 
 export interface Env {
   TO_EMAIL: string;
@@ -41,7 +41,7 @@ let devOutbox: unknown[] = [];
 const devReviews: Review[] = [];
 
 export default {
-  async fetch(req: Request, env: Env): Promise<Response> {
+  async fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(req.url);
     const cors = corsHeaders(req, env);
     try {
@@ -50,10 +50,8 @@ export default {
         if (!cors['Access-Control-Allow-Origin']) return json({ error: 'Not allowed from this site.' }, 403, cors);
         return await submit(req, env, url, cors);
       }
-      if (url.pathname === '/click' && req.method === 'POST') return await logClick(req, env, cors);
+      if (url.pathname === '/click' && req.method === 'POST') return await logClick(req, env, cors, ctx);
       if (url.pathname === '/clicks' && req.method === 'GET') return await clicksPage(url, env);
-      if (url.pathname === '/clicks/send-link' && req.method === 'POST') return await sendClicksLink(env);
-      if (url.pathname === '/dev/summary' && env.DEV_MODE === '1') { await dailySummary(env); return json({ outbox: devOutbox }, 200, {}); }
       if (url.pathname === '/approve' && req.method === 'GET') return await approvePage(url, env);
       if (url.pathname === '/approve' && req.method === 'POST') return await approve(req, env);
       if (url.pathname === '/dev/last' && env.DEV_MODE === '1') return json({ outbox: devOutbox, reviews: devReviews }, 200, {});
@@ -64,15 +62,15 @@ export default {
       return json({ error: 'Something went wrong on my end.' }, 500, cors);
     }
   },
-  async scheduled(_ctl: ScheduledController, env: Env) {
-    await dailySummary(env);
-  },
 };
 
 // ------------------------------------------------------------------ Etsy clicks
 type Click = { t: string; p: string; c: string };
 
-async function logClick(req: Request, env: Env, cors: Record<string, string>) {
+// Resend's free plan allows 100 emails a day (shared with the forms), so click emails stop at this many a day; clicks are still logged.
+const CLICK_EMAILS_PER_DAY = 80;
+
+async function logClick(req: Request, env: Env, cors: Record<string, string>, ctx: ExecutionContext) {
   // Only count clicks from the site itself (the browser sends Origin with the beacon).
   if (!cors['Access-Control-Allow-Origin']) return new Response(null, { status: 403 });
   let body: { product?: unknown; case?: unknown };
@@ -81,7 +79,24 @@ async function logClick(req: Request, env: Env, cors: Record<string, string>) {
   if (!p) return new Response(null, { status: 400, headers: cors });
   const t = new Date().toISOString();
   await env.CLICKS.put(`c:${t}:${crypto.randomUUID().slice(0, 6)}`, '', { metadata: { p, c } });
+  ctx.waitUntil(clickEmail(env, { t, p, c }).catch(err => console.error('click email', err)));
   return new Response(null, { status: 204, headers: cors });
+}
+
+async function clickEmail(env: Env, click: Click) {
+  const quota = `meta:mails:${click.t.slice(0, 10)}`, sent = +(await env.CLICKS.get(quota) ?? 0);
+  if (sent >= CLICK_EMAILS_PER_DAY) { console.log('click email limit reached for today; logged only'); return; }
+  await env.CLICKS.put(quota, String(sent + 1), { expirationTtl: 3 * 86400 });
+  const all = await readClicks(env), forThis = all.filter(x => x.p === click.p).length;
+  const time = new Date(click.t).toLocaleTimeString('en-US', { timeZone: env.TIME_ZONE, hour: 'numeric', minute: '2-digit', second: '2-digit', timeZoneName: 'short' }); // seconds keep each subject unique, so Gmail doesn't stack clicks into one thread
+  const td = 'style="padding:6px 14px 6px 0;color:#687082;white-space:nowrap"';
+  await sendEmail(env, `Etsy click: ${click.p} — ${time}`, mailBox('Someone clicked “Buy on Etsy”',
+    `<table style="border-collapse:collapse"><tr><td ${td}>Product</td><td><strong>${esc(click.p)}</strong></td></tr>
+      ${click.c ? `<tr><td ${td}>Gallery case</td><td>${esc(click.c)}</td></tr>` : ''}
+      <tr><td ${td}>When</td><td>${when(click.t, env)}</td></tr>
+      <tr><td ${td}>Clicks on this product</td><td>${forThis}</td></tr>
+      <tr><td ${td}>Clicks on all products</td><td>${all.length}</td></tr></table>
+    <p style="margin-top:18px"><a href="${esc(await clicksUrl(env))}" style="color:#0B5AD6;font-weight:700">See every click so far</a> <span style="color:#687082;font-size:13px">(private link)</span></p>`));
 }
 
 async function readClicks(env: Env, prefix = 'c:'): Promise<Click[]> {
@@ -119,7 +134,7 @@ async function clicksPage(url: URL, env: Env) {
 }
 
 async function sendEmail(env: Env, subject: string, html: string) {
-  if (!env.RESEND_API_KEY) { devOutbox = [{ subject, html }]; console.log('[dev] would send:', subject); return; }
+  if (!env.RESEND_API_KEY) { devOutbox = [{ subject, html }, ...devOutbox].slice(0, 10); console.log('[dev] would send:', subject); return; }
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
@@ -129,24 +144,6 @@ async function sendEmail(env: Env, subject: string, html: string) {
 }
 
 const mailBox = (title: string, inner: string) => `<div style="font-family:Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.5;color:#39404F;max-width:640px"><div style="background:#0C3A85;color:#FFFFFF;padding:16px 20px;border-radius:4px 4px 0 0;font-size:20px;font-weight:700">${title}</div><div style="border:2px solid #39404F;border-top:0;padding:16px 20px;border-radius:0 0 4px 4px">${inner}</div></div>`;
-
-async function dailySummary(env: Env) {
-  const now = Date.now(), since = now - 24 * 3600 * 1000, day = (ms: number) => new Date(ms).toISOString().slice(0, 10);
-  const days = day(since) === day(now) ? [day(now)] : [day(since), day(now)];
-  const clicks = (await Promise.all(days.map(d => readClicks(env, `c:${d}`)))).flat().filter(c => Date.parse(c.t) >= since);
-  if (!clicks.length) return;
-  const n = clicks.length, s = n === 1 ? '' : 's';
-  await sendEmail(env, `Etsy clicks: ${n} in the last 24 hours`, mailBox(`${n} “Buy on Etsy” click${s} in the last 24 hours`,
-    `${clickTables(clicks, env)}<p style="margin-top:20px"><a href="${esc(await clicksUrl(env))}" style="color:#0B5AD6;font-weight:700">See every click so far</a> <span style="color:#687082;font-size:13px">(private link)</span></p>`));
-}
-
-// Emails Mike the private click-log link (it only ever goes to TO_EMAIL), at most once every 10 minutes.
-async function sendClicksLink(env: Env) {
-  if (await env.CLICKS.get('meta:link-sent')) return json({ ok: true }, 200, {});
-  await env.CLICKS.put('meta:link-sent', '1', { expirationTtl: 600 });
-  await sendEmail(env, 'Your Etsy click log link', mailBox('Your Etsy click log', `<p>This private link shows every “Buy on Etsy” click on your site: which product, and when.</p><p><a href="${esc(await clicksUrl(env))}" style="color:#0B5AD6;font-weight:700">Open the click log</a></p><p style="color:#687082;font-size:13px">You’ll also get a summary email on any day the button is clicked.</p>`));
-  return json({ ok: true }, 200, {});
-}
 
 // ------------------------------------------------------------------ submit
 async function submit(req: Request, env: Env, url: URL, cors: Record<string, string>) {
