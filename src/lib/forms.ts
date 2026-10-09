@@ -1,4 +1,4 @@
-// In-page forms (custom design "make it" / "solve it", reviews): rendering from a spec, required-field
+// In-page forms (custom design "make it" / "solve it", reviews, gallery orders): rendering from a spec, required-field
 // checks, uploads, sending, and the thank-you screen with "edit my response" / "new form".
 import { sendForm, mountSpamCheck } from './submit';
 
@@ -13,7 +13,7 @@ export type Field =
   | (Base & { kind: 'files' });
 
 export type FormSpec = {
-  type: 'make' | 'solve' | 'review';
+  type: 'make' | 'solve' | 'review' | 'order';
   sections: { title: string; fields: Field[] }[];
   submitLabel: string;
   thanks: { title: string; body: string; another: string };
@@ -77,7 +77,8 @@ function fieldHtml(f: Field, p: string) {
 }
 
 /** Renders `spec` into `host` and wires it up. Returns a focus helper for when the form is shown. */
-export function mountForm(host: HTMLElement, spec: FormSpec, opts: { onDone?: () => void } = {}) {
+/** `extra` adds answers the visitor picked outside the form (e.g. the product and colour of an order). */
+export function mountForm(host: HTMLElement, spec: FormSpec, opts: { onDone?: () => void; extra?: () => Answer[] } = {}) {
   const p = `f-${spec.type}`;
   const fields = spec.sections.flatMap(s => s.fields);
   host.innerHTML = `
@@ -248,7 +249,7 @@ export function mountForm(host: HTMLElement, spec: FormSpec, opts: { onDone?: ()
     if (bad.length) { showNotice(bad); return; }
     notice.hidden = true;
 
-    const answers: Answer[] = fields.map(f => ({ name: f.name, label: f.label, value: valueOf(f) }));
+    const answers: Answer[] = [...(opts.extra?.() ?? []), ...fields.map(f => ({ name: f.name, label: f.label, value: valueOf(f) }))];
     const data = new FormData();
     data.set('payload', JSON.stringify({ form: spec.type, ref, edit: isEdit, answers }));
     files.forEach(f => data.append('files', f, f.name));

@@ -18,7 +18,7 @@ export interface Env {
   DEV_MODE?: string; // "1" locally: no email is sent; GET /dev/last shows what would have been
 }
 
-type FormType = 'make' | 'solve' | 'review';
+type FormType = 'make' | 'solve' | 'review' | 'order';
 type Answer = { name: string; label: string; value: string };
 type Review = { id: string; name: string; product: string; rating: number; comment: string; date: string };
 
@@ -27,6 +27,7 @@ const REQUIRED: Record<FormType, string[]> = {
   make: ['name', 'email', 'title', 'description'],
   solve: ['name', 'email', 'problem', 'purpose', 'use'],
   review: ['name', 'email', 'product', 'rating', 'comment'],
+  order: ['product', 'colour', 'name', 'email', 'quantity'],
 };
 const FILE_EXT = /\.(jpe?g|png|webp|gif|heic|heif|pdf|stl|3mf|step|stp|obj)$/i;
 const MAX_FILES = 6, MAX_EACH = 8 * 1024 * 1024, MAX_TOTAL = 20 * 1024 * 1024;
@@ -84,7 +85,7 @@ async function submit(req: Request, env: Env, url: URL, cors: Record<string, str
   const rating = form === 'review' ? parseInt(get('rating'), 10) : 0;
   if (form === 'review' && !(rating >= 1 && rating <= 5)) return json({ error: 'Pick a star rating.' }, 400, cors);
 
-  const files = form === 'review' ? [] : fd.getAll('files').filter((f): f is File => typeof f !== 'string');
+  const files = form === 'review' || form === 'order' ? [] : fd.getAll('files').filter((f): f is File => typeof f !== 'string');
   if (files.length > MAX_FILES) return json({ error: `Attach up to ${MAX_FILES} files.` }, 400, cors);
   let total = 0;
   for (const f of files) {
@@ -97,6 +98,7 @@ async function submit(req: Request, env: Env, url: URL, cors: Record<string, str
   const name = get('name'), edited = payload.edit ? 'Updated: ' : '';
   const subject = form === 'make' ? `${edited}New project (Make it): ${get('title')} — ${name}`
     : form === 'solve' ? `${edited}New project (Solve it) — ${name}`
+    : form === 'order' ? `${edited}New order: ${get('quantity')} × ${get('product')} in ${get('colour')} — ${name}`
     : `${edited}New review: ${'★'.repeat(rating)} ${get('product')} — ${name}`;
   let approveUrl = '';
   if (form === 'review') {
@@ -212,7 +214,7 @@ const stars = (n: number) => `<span style="color:#E8A132;font-size:20px;letter-s
 const reviewCard = (r: Review) => `<div class="card"><p><strong>${esc(r.name)}</strong> — ${esc(r.product)}</p><p>${stars(r.rating)}</p><p>${esc(r.comment)}</p></div>`;
 
 function emailHtml(form: FormType, ref: string, edit: boolean, answers: Answer[], fileNames: string[], approveUrl: string) {
-  const heading = form === 'make' ? 'New custom project — Make it' : form === 'solve' ? 'New custom project — Solve it' : 'New review to approve';
+  const heading = form === 'make' ? 'New custom project — Make it' : form === 'solve' ? 'New custom project — Solve it' : form === 'order' ? 'New order request — confirm the total and payment with them' : 'New review to approve';
   const rows = answers.filter(a => a.value).map(a => `<tr><td style="padding:8px 12px 8px 0;color:#687082;vertical-align:top;white-space:nowrap">${esc(a.label)}</td><td style="padding:8px 0;color:#1B1F27;white-space:pre-wrap">${esc(a.value)}</td></tr>`).join('');
   const button = approveUrl ? `<p style="margin:24px 0 8px"><a href="${esc(approveUrl)}" style="display:inline-block;padding:12px 20px;background:#1F6FEB;color:#FFFFFF;text-decoration:none;border-radius:3px;font-weight:700">Approve &amp; publish</a></p><p style="color:#687082;font-size:13px;margin:0">Opens a confirmation page — nothing goes live until you press Publish there. To reject, just ignore this email.</p>` : '';
   const files = fileNames.length ? `<p style="color:#39404F">Attached: ${fileNames.map(esc).join(', ')}</p>` : '';

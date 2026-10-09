@@ -32,7 +32,7 @@ export const MAKE: FormSpec = {
   submitLabel: 'Send my project',
   thanks: {
     title: 'Got it — thanks!',
-    body: 'Your project is on my desk. I’ll look it over and reply by email, usually within a day or two.',
+    body: 'Your project is on my desk. I’ll look it over and reply by email.',
     another: 'Start another project',
   },
 };
@@ -69,6 +69,27 @@ export const SOLVE: FormSpec = {
   },
 };
 
+// Gallery order request. The product, colour and price are added by the gallery (mountForm's `extra`).
+export const ORDER: FormSpec = {
+  type: 'order',
+  sections: [
+    { title: 'Your contact details', fields: contact },
+    {
+      title: 'Your order',
+      fields: [
+        { kind: 'number', name: 'quantity', label: 'How many?', required: true, min: 1, max: 20, value: 1 },
+        { kind: 'textarea', name: 'notes', label: 'Questions or special requests', rows: 3, help: 'A different colour, a custom size, a name added, or anything you’d like to ask.' },
+      ],
+    },
+  ],
+  submitLabel: 'Send my order request',
+  thanks: {
+    title: 'Order request sent!',
+    body: 'Nothing has been charged. I’ll email you to confirm the details, the total and how to pay.',
+    another: 'Start a new order',
+  },
+};
+
 export const REVIEW: FormSpec = {
   type: 'review',
   sections: [
@@ -82,7 +103,7 @@ export const REVIEW: FormSpec = {
     {
       title: 'Your review',
       fields: [
-        { kind: 'select', name: 'product', label: 'What did you buy?', required: true, options: [...PRODUCTS.map(p => p.name), 'Custom order'], placeholder: 'Pick a product' },
+        { kind: 'select', name: 'product', label: 'What did you buy?', required: true, options: [...PRODUCTS.map(p => p.name), 'Custom order', 'Something else'], placeholder: 'Pick one' },
         { kind: 'rating', name: 'rating', label: 'Your rating', required: true },
         { kind: 'textarea', name: 'comment', label: 'Your review', required: true, rows: 4, maxLength: 400, help: 'What did you like? What could be better?' },
       ],

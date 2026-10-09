@@ -66,13 +66,14 @@ export const wallHtml = (tf: string) => `
         </div>`;
 
 /** One display case (geometry is applied by gallery.ts). */
-export function caseHtml(p: Product, i: number, num: string, left: boolean, photo?: string) {
+export function caseHtml(p: Product | null, i: number, num: string, left: boolean, photo?: string) {
   const shTf = 'translate3d(' + (left ? -30 : 30) + 'px,-2px,0) rotateX(90deg)';
   const dL = left ? 0.34 : 0.1, dR = left ? 0.1 : 0.34;
   const mpos = ((i * 83) % 240) + 'px ' + ((i * 137) % 240) + 'px';
-  const slot = photo
+  const slot = p && photo
     ? `<img class="g-photo" src="${photo}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
-    : `<div class="ph" role="img" aria-label="${esc(p.name)} — photo coming soon">${PH_ICON}<span>Photo coming soon</span></div>`;
+    : `<div class="ph" role="img" aria-label="Coming soon">${PH_ICON}<span>Coming soon</span></div>`;
+  const name = p ? p.name : 'Coming soon...', desc = p ? p.desc : 'Description: TBD', price = p ? p.price : 'Price: TBD';
   return `
         <div class="g-case" data-case="${i}">
           <div style="position:absolute;left:-280px;top:-280px;width:560px;height:560px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,234,196,.55),rgba(255,234,196,.2) 55%,rgba(255,234,196,0));transform:translate3d(0,-1px,0) rotateX(90deg);"></div>
@@ -99,9 +100,9 @@ export function caseHtml(p: Product, i: number, num: string, left: boolean, phot
           <div style="position:absolute;left:-95px;top:-108px;width:190px;height:216px;box-sizing:border-box;background:linear-gradient(rgba(0,0,0,.24),rgba(0,0,0,0) 14px),linear-gradient(rgba(255,246,225,.14),rgba(7,9,14,.16)),linear-gradient(90deg,rgba(0,0,0,.1),rgba(0,0,0,0) 4px,rgba(0,0,0,0) calc(100% - 4px),rgba(0,0,0,.1)),url(${T.white}) ${mpos}/320px 320px;backface-visibility:hidden;transform:translate3d(0,-142px,95px);display:flex;justify-content:center;padding-top:30px;">
             <div style="width:156px;height:max-content;box-sizing:border-box;padding:9px 11px 11px;background:#39404F;color:#FFFFFF;border-radius:2px;box-shadow:inset 0 0 0 2px #4B5263,0 0 0 1px rgba(232,161,50,.75),2px 4px 5px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:5px;">
               <span style="font:700 9px/1 var(--font-display);letter-spacing:.14em;color:#01CBFE;">CASE ${num}</span>
-              <span style="font:700 14px/1.1 var(--font-display);letter-spacing:-.01em;">${esc(p.name)}</span>
-              <span style="font:500 10px/1.35 var(--font-body);color:#C2C7D1;">${esc(p.desc)}</span>
-              <span style="font:700 13px/1 var(--font-display);font-variant-numeric:tabular-nums;color:#FFFFFF;margin-top:2px;">${esc(p.price)}</span>
+              <span style="font:700 14px/1.1 var(--font-display);letter-spacing:-.01em;">${esc(name)}</span>
+              <span style="font:500 10px/1.35 var(--font-body);color:#C2C7D1;">${esc(desc)}</span>
+              <span style="font:700 13px/1 var(--font-display);font-variant-numeric:tabular-nums;color:#FFFFFF;margin-top:2px;">${esc(price)}</span>
             </div>
           </div>
           <!-- cap -->

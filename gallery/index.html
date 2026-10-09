@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<x-include src="head" title="The Gallery — Mike's Models" description="Walk the gallery of Mike's Models: flexi dragons, gear toys, gadgets and engineering prints, each with a close-up and price." theme="#1B1F27"></x-include>
+<x-include src="head" title="The Gallery — Mike's Models" description="Walk the Mike's Models gallery, where finished 3D prints go on display with their price and colour options." theme="#1B1F27"></x-include>
 <script type="module" src="/src/pages/gallery.ts"></script>
 </head>
 <body>
@@ -45,23 +45,41 @@
     <button type="button" class="g-walk-btn g-walk-back" data-walk-back aria-label="Step back" title="Step back"><x-icon name="arrow-down" size="24"></x-icon></button>
   </div>
 
-  <!-- Close-up info -->
+  <!-- Close-up menu: product details, colour, order; or "Coming soon..." for an empty case -->
   <section data-panel role="dialog" aria-labelledby="g-panel-h" aria-hidden="true" class="g-panel" inert>
-    <div class="g-panel-card">
+    <div class="g-panel-card" data-view="item">
       <div class="g-plaque">
         <span class="g-plaque-num">CASE <span data-p="num">01</span> OF <span data-p="total">12</span></span>
         <h2 id="g-panel-h" data-p="name"></h2>
         <p data-p="desc"></p>
-        <p class="g-plaque-origin"><strong>Origin:</strong> <span data-p="origin"></span></p>
+        <p class="g-plaque-origin" data-p-origin hidden><strong>Origin:</strong> <span data-p="origin"></span></p>
         <div class="g-plaque-price">
           <span>PRICE</span>
           <span data-p="price"></span>
         </div>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;">
-        <a class="btn btn--primary" data-p-mailto href="mailto:mikes3dmodels@gmail.com"><x-icon name="mail" size="18"></x-icon>Ask about this one</a>
-        <button type="button" class="btn btn--secondary" data-close><x-icon name="arrow-left" size="18"></x-icon>Back to the hall</button>
+      <div data-shop class="g-shop" hidden>
+        <fieldset class="g-colours">
+          <legend>Colour: <strong data-colour-name></strong></legend>
+          <div class="g-swatches" data-swatches></div>
+          <p class="g-note">Don’t see the colour you want? Ask me. I can order in whatever colour you’d like.</p>
+        </fieldset>
+        <button type="button" class="btn btn--primary btn--lg g-order-btn" data-order><x-icon name="shopping-bag" size="18"></x-icon>Order this one</button>
       </div>
+      <div data-soon class="g-soon" hidden>
+        <p>A new piece is on its way to this case. Need something made now?</p>
+        <a class="btn btn--primary" href="../custom-design/"><x-icon name="pencil-ruler" size="18"></x-icon>Request a custom design</a>
+      </div>
+      <p class="g-ask"><x-icon name="mail" size="16"></x-icon><span>Questions or special requests? <a data-p-mailto href="mailto:mikes3dmodels@gmail.com">Email me</a>.</span></p>
+      <button type="button" class="btn btn--secondary" data-close><x-icon name="arrow-left" size="18"></x-icon>Back to the hall</button>
+    </div>
+    <div class="g-panel-card" data-view="order" hidden>
+      <button type="button" class="g-back-link" data-to-item><x-icon name="arrow-left" size="16"></x-icon>Back to the product</button>
+      <div class="g-order-sum">
+        <span class="g-swatch g-swatch--sum" data-sum-swatch aria-hidden="true"></span>
+        <div><h2 data-sum-name></h2><p><span data-sum-colour></span> · <span data-sum-price></span> each</p></div>
+      </div>
+      <div data-order-form></div>
     </div>
   </section>
 </main>

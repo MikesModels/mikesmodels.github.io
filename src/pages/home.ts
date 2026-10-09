@@ -2,11 +2,14 @@ import '../styles/site.css';
 import '../styles/home.css';
 import { startAmbientMotion } from '../lib/motion';
 import { pageReady } from '../lib/transition';
+import { PRODUCTS } from '../data/products';
 
 const MSGS: Record<string, [string, string]> = {
   default: ["Welcome to Mike's Models!", "From fun toys and gadgets to DIY and engineering projects, I'm here to help! Select a sign to continue."],
   custom: ['Got an idea?', 'If you know exactly what you want or need help figuring it out, this is the place for you.'],
-  gallery: ['Have a browse.', "Flexi dragons, keychains, gadgets — everything I've printed lately."],
+  gallery: PRODUCTS.length
+    ? ['Have a browse.', 'Finished pieces, each with a close-up, price and colour choices.']
+    : ['Take a look around.', 'Finished pieces go on display here. The first ones are coming soon.'],
   about: ["That's me.", 'Who I am, how I work, and the quickest way to reach me.'],
 };
 

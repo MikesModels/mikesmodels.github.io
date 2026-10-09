@@ -1,18 +1,23 @@
 import '../styles/site.css';
 import '../styles/gallery.css';
-import { PRODUCTS, photoUrl } from '../data/products';
+import '../styles/forms.css';
+import { CASES, PRODUCTS, coloursOf, swatchFill, photoUrl, type Product } from '../data/products';
+import { ORDER } from '../data/form-specs';
 import { bayHtml, wallHtml, caseHtml } from './gallery-markup';
+import { mountForm } from '../lib/forms';
 import { initBackNav } from '../lib/nav';
 import { pageReady } from '../lib/transition';
 
 // Hallway geometry (px of depth). Cases stand in pairs, one bay (760px) apart; with 12 items this is
 // the design's CAMS = [0, 400, 1160, 1920, 2680, 3440, 4200, 4580] and an end wall at 5080.
 const CASE_ANGLE = 35;
-const N = PRODUCTS.length, PAIRS = Math.ceil(N / 2);
+// Cases are filled from PRODUCTS in order; the rest are "Coming soon...".
+const N = CASES, PAIRS = Math.ceil(N / 2);
 const LAST_PAIR_Z = 700 + 760 * (PAIRS - 1);
 const END_Z = LAST_PAIR_Z + 580;
 const CAMS = [0, ...Array.from({ length: PAIRS }, (_, k) => 400 + 760 * k), LAST_PAIR_Z + 80];
 const pad = (n: number) => (n < 10 ? '0' : '') + n;
+const item = (i: number): Product | null => PRODUCTS[i] ?? null;
 const $ = <T extends Element = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
 
 type State = { step: number; hideCam: number; sel: number | null; lastSel: number | null; scale: number; narrow: boolean };
@@ -37,16 +42,16 @@ $('[data-p="total"]').textContent = pad(N);
 const cases: HTMLElement[] = [];
 {
   const tpl = document.createElement('template');
-  tpl.innerHTML = PRODUCTS.map((p, i) => caseHtml(p, i, pad(i + 1), i % 2 === 0, photoUrl(p.image))).reverse().join('');
+  tpl.innerHTML = Array.from({ length: N }, (_, i) => caseHtml(item(i), i, pad(i + 1), i % 2 === 0, photoUrl(item(i)?.image))).reverse().join('');
   tpl.content.querySelectorAll<HTMLElement>('[data-case]').forEach(el => (cases[+el.dataset.case!] = el));
   world.append(tpl.content);
 }
 
 const caseList = $('[data-case-list]');
-PRODUCTS.forEach((p, i) => {
+Array.from({ length: N }, (_, i) => item(i)).forEach((p, i) => {
   const li = document.createElement('li'), b = document.createElement('button');
   b.type = 'button';
-  b.textContent = `Case ${pad(i + 1)}: ${p.name}, ${p.price}`;
+  b.textContent = `Case ${pad(i + 1)}: ${p ? `${p.name}, ${p.price}` : 'Coming soon'}`;
   b.addEventListener('click', () => open(i));
   li.append(b);
   caseList.append(li);
@@ -55,7 +60,7 @@ PRODUCTS.forEach((p, i) => {
 // ---- Camera ----
 function cams(narrow: boolean) {
   if (!narrow) return CAMS.map(z => ({ x: 0, z }));
-  return [{ x: 0, z: 0 }, ...PRODUCTS.map((_, i) => ({ x: i % 2 === 0 ? -460 : 460, z: 280 + 760 * Math.floor(i / 2) })), { x: 0, z: CAMS[CAMS.length - 1] }];
+  return [{ x: 0, z: 0 }, ...Array.from({ length: N }, (_, i) => ({ x: i % 2 === 0 ? -460 : 460, z: 280 + 760 * Math.floor(i / 2) })), { x: 0, z: CAMS[CAMS.length - 1] }];
 }
 function caseGeo(i: number, narrow: boolean) {
   const ang = narrow ? 12 : CASE_ANGLE, left = i % 2 === 0;
@@ -102,12 +107,77 @@ function render() {
   panel.inert = !isOpen;
 }
 
+// ---- Close-up menu ----
+const viewItem = $('[data-view="item"]'), viewOrder = $('[data-view="order"]');
+const shop = $('[data-shop]'), soon = $('[data-soon]'), swatches = $('[data-swatches]'), colourName = $('[data-colour-name]');
+const mailto = $<HTMLAnchorElement>('[data-p-mailto]');
+let colour = '';
+
+const setMailto = (subject: string) => (mailto.href = 'mailto:mikes3dmodels@gmail.com?subject=' + encodeURIComponent(subject));
+
 function fillPanel(i: number) {
-  const p = PRODUCTS[i];
+  const p = item(i);
   const set = (k: string, v: string) => ($(`[data-p="${k}"]`).textContent = v);
-  set('num', pad(i + 1)); set('name', p.name); set('desc', p.desc); set('origin', p.origin); set('price', p.price);
-  $<HTMLAnchorElement>('[data-p-mailto]').href = 'mailto:mikes3dmodels@gmail.com?subject=' + encodeURIComponent(`Gallery case ${pad(i + 1)}: ${p.name}`);
+  set('num', pad(i + 1));
+  set('name', p ? p.name : 'Coming soon...');
+  set('desc', p ? p.desc : 'Description: TBD');
+  set('price', p ? p.price : 'TBD');
+  set('origin', p?.origin ?? '');
+  $('[data-p-origin]').hidden = !p?.origin;
+  shop.hidden = !p; soon.hidden = !!p;
+  showView('item');
+  if (!p) { setMailto(`Gallery case ${pad(i + 1)}`); return; }
+
+  const cs = coloursOf(p);
+  colour = cs[0]?.name ?? '';
+  $('.g-colours').hidden = !cs.length;
+  swatches.innerHTML = cs.map((c, k) => `<label class="g-swatch-opt" title="${c.name}"><input type="radio" name="g-colour" value="${c.name}"${k ? '' : ' checked'}><span class="g-swatch" style="background:${swatchFill(c)}"></span><span class="sr-only">${c.name}${c.hex.length > 1 ? ' (mixed)' : ''}</span></label>`).join('');
+  showColour(colour);
 }
+function showColour(name: string) {
+  colourName.textContent = name;
+  const p = item(state.sel ?? -1);
+  if (p) setMailto(`Question about the ${p.name}${colour ? ` (${colour})` : ''}`);
+}
+// Amazon-style: the label previews a colour on hover and settles on the one that's picked.
+swatches.addEventListener('change', e => { colour = (e.target as HTMLInputElement).value; showColour(colour); });
+swatches.addEventListener('mouseover', e => {
+  const v = (e.target as Element).closest('label')?.querySelector('input')?.value;
+  if (v) colourName.textContent = v;
+});
+swatches.addEventListener('mouseleave', () => (colourName.textContent = colour));
+
+const orderForm = mountForm($('[data-order-form]'), ORDER, {
+  extra: () => {
+    const p = item(state.sel!)!;
+    return [
+      { name: 'product', label: 'Product', value: p.name },
+      { name: 'case', label: 'Gallery case', value: pad(state.sel! + 1) },
+      { name: 'colour', label: 'Colour', value: colour || 'As shown' },
+      { name: 'price', label: 'Listed price', value: p.price },
+    ];
+  },
+});
+function showView(v: 'item' | 'order') {
+  viewItem.hidden = v !== 'item'; viewOrder.hidden = v !== 'order';
+  panel.scrollTop = 0;
+}
+$('[data-order]').addEventListener('click', () => {
+  const p = item(state.sel!)!, c = coloursOf(p).find(x => x.name === colour);
+  $('[data-sum-name]').textContent = p.name;
+  $('[data-sum-colour]').textContent = colour || 'As shown';
+  $('[data-sum-price]').textContent = p.price;
+  const sw = $('[data-sum-swatch]');
+  sw.hidden = !c;
+  if (c) sw.style.background = swatchFill(c);
+  showView('order');
+  orderForm.shown();
+});
+function backToItem() {
+  showView('item');
+  $<HTMLElement>('[data-order]').focus({ preventScroll: true });
+}
+$('[data-to-item]').addEventListener('click', backToItem);
 
 let settle = 0;
 function move(patch: Partial<State>) {
@@ -129,7 +199,11 @@ function open(i: number) {
   fillPanel(i);
   move({ sel: i, lastSel: i, step: state.narrow ? i + 1 : Math.floor(i / 2) + 1 });
   // Focus the panel once it has faded in, so keyboard users land on its actions.
-  setTimeout(() => { if (state.sel === i) panel.querySelector<HTMLElement>('[data-p-mailto]')!.focus({ preventScroll: true }); }, 720);
+  setTimeout(() => {
+    if (state.sel !== i) return;
+    const first = item(i) ? swatches.querySelector<HTMLElement>('input:checked') ?? $('[data-order]') : soon.querySelector<HTMLElement>('a')!;
+    first.focus({ preventScroll: true });
+  }, 720);
 }
 function close() {
   if (state.sel == null) return;
@@ -149,7 +223,7 @@ fwdBtn.addEventListener('click', () => go(state.step + 1));
 backBtn.addEventListener('click', () => go(state.step - 1));
 
 window.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && state.sel != null) return close();
+  if (e.key === 'Escape' && state.sel != null) return viewOrder.hidden ? close() : backToItem();
   if (state.sel != null) return;
   if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); go(state.step + 1); }
   else if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); go(state.step - 1); }
@@ -187,4 +261,8 @@ function onResize() {
 window.addEventListener('resize', onResize);
 onResize();
 pageReady();
-initBackNav(() => { if (state.sel != null) { close(); return true; } return false; });
+initBackNav(() => {
+  if (state.sel == null) return false;
+  if (!viewOrder.hidden) backToItem(); else close();
+  return true;
+});
