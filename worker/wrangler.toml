@@ -15,7 +15,7 @@ TIME_ZONE = "America/New_York"
 # Etsy click log (product + time only); every click is also emailed to TO_EMAIL straight away.
 [[kv_namespaces]]
 binding = "CLICKS"
-id = "PENDING"
+id = "ccd5c677fd104f079d462f1ad7676548"
 
 # Secrets — never put these in this file. Set each one with:  npx wrangler secret put NAME
 #   RESEND_API_KEY    (resend.com → API Keys)
