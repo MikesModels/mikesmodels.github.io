@@ -2,7 +2,7 @@
 // once the next page has finished setting itself up (scene built, bubble placed, fonts loaded), so visitors never
 // see a half-built page. The arriving page's black cover comes from the inline script in partials/head.html.
 const root = document.documentElement;
-const OUT_MS = 180;
+const OUT_MS = matchMedia('(prefers-reduced-motion: reduce)').matches ? 120 : 250; // matches the fade in partials/head.html
 
 /** Fade to black, then run `go` (navigate). */
 export function fadeOut(go: () => void) {

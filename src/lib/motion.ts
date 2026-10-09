@@ -22,7 +22,7 @@ function start() {
       add(el, [{ transform: 'rotate(-1.4deg)' }, { transform: 'rotate(1.4deg)' }],
         { duration: 4200 + (i % 4) * 900, iterations: inf, direction: 'alternate', easing: 'ease-in-out', delay: -(i * 700) });
     } else if (t === 'spin') {
-      add(el, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 18000, iterations: inf, easing: 'linear' });
+      add(el, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 18000, iterations: inf, easing: 'linear' }); // an HTML layer, so it runs on the compositor
     } else if (t === 'banner') {
       add(el, [{ transform: 'rotate(-0.3deg) skewX(0.2deg)' }, { transform: 'rotate(0.3deg) skewX(-0.2deg)' }],
         { duration: 5200, iterations: inf, direction: 'alternate', easing: 'ease-in-out' });

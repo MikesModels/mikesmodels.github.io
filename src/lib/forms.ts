@@ -114,6 +114,7 @@ export function mountForm(host: HTMLElement, spec: FormSpec, opts: { onDone?: ()
   const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]')!;
   let ref = newRef(), isEdit = false, sending = false;
   let spam: Promise<{ token(): string; reset(): void }> | null = null;
+  const loadSpam = () => (spam ??= mountSpamCheck(host.querySelector<HTMLElement>('.spam-slot')!).catch(() => ({ token: () => '', reset: () => {} })));
 
   // ---- rating ----
   const ratingField = fields.find(f => f.kind === 'rating');
@@ -253,7 +254,7 @@ export function mountForm(host: HTMLElement, spec: FormSpec, opts: { onDone?: ()
     data.set('payload', JSON.stringify({ form: spec.type, ref, edit: isEdit, answers }));
     files.forEach(f => data.append('files', f, f.name));
     data.set('mm_hp', val('mm_hp'));
-    const check2 = spam ? await spam : null;
+    const check2 = await loadSpam();
     data.set('cf-turnstile-response', check2?.token() ?? '');
 
     sending = true; submitBtn.disabled = true; submitLabel.textContent = 'Sending…';
@@ -304,10 +305,11 @@ export function mountForm(host: HTMLElement, spec: FormSpec, opts: { onDone?: ()
   const focusFirst = () => form.querySelector<HTMLElement>('input:not([type=hidden]):not([tabindex="-1"]), select, textarea')?.focus({ preventScroll: true });
 
   return {
-    /** Call when the form becomes visible: loads the spam check once and focuses the first field. */
+    /** Call when the form becomes visible: focuses the first field, and loads the spam check once the opening
+     *  animation is over (loading it is heavy enough to stutter the animation). */
     shown() {
-      spam ??= mountSpamCheck(host.querySelector<HTMLElement>('.spam-slot')!).catch(() => ({ token: () => '', reset: () => {} }));
       if (!form.hidden) focusFirst();
+      if (!spam) setTimeout(loadSpam, 1400);
     },
   };
 }

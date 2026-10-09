@@ -99,3 +99,6 @@ a.sign:active{transform:translateY(1px)}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;scroll-behavior:auto !important}
 }
+/* Backdrop windmill blades (partials/backdrop.html): s = the landscape SVG's "slice" scale, blades centred on (1452,180) */
+.windmill-box{position:absolute;left:-1%;width:102%;bottom:15%;height:56%;container-type:size;pointer-events:none}
+.windmill{--s:max(100cqw / 1600,100cqh / 500);position:absolute;width:calc(76 * var(--s));height:calc(76 * var(--s));left:calc(50cqw + 614 * var(--s));top:calc(100cqh - 358 * var(--s));filter:blur(2.6px);will-change:transform}

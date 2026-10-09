@@ -76,6 +76,17 @@ function view(st: State) {
   return { tf: `rotateY(0deg) translate3d(${-p.x}px,0px,${p.z}px)`, eq: p.z };
 }
 
+// Only write a style when its value changes: each step re-renders the whole hall, and rewriting unchanged
+// styles still makes the browser recheck every plane.
+const last = new WeakMap<HTMLElement, Record<string, string>>();
+function put(el: HTMLElement, prop: 'display' | 'opacity' | 'transform', v: string) {
+  let m = last.get(el);
+  if (!m) last.set(el, (m = {}));
+  if (m[prop] === v) return;
+  m[prop] = v;
+  el.style[prop] = v;
+}
+
 const shade = (d: number) => (Math.max(0, Math.min(1, (d - 700) / 4400)) * 0.5).toFixed(3);
 
 function render() {
@@ -84,15 +95,15 @@ function render() {
   world.style.transform = v.tf;
   for (const b of bays) {
     const disp = b.zc - 380 + hc > 950 ? 'none' : 'block', sh = shade(-b.zc - cam);
-    b.parts.forEach(p => (p.style.display = disp));
-    b.shades.forEach(s => (s.style.opacity = sh));
+    b.parts.forEach(p => put(p, 'display', disp));
+    b.shades.forEach(s => put(s, 'opacity', sh));
   }
   cases.forEach((el, i) => {
     const g = caseGeo(i, narrow);
-    el.style.transform = `translate3d(${g.x}px,330px,${g.z}px) rotateY(${g.a}deg)`;
-    el.style.display = g.z + hc > 700 ? 'none' : 'block';
+    put(el, 'transform', `translate3d(${g.x}px,330px,${g.z}px) rotateY(${g.a}deg)`);
+    put(el, 'display', g.z + hc > 700 ? 'none' : 'block');
   });
-  endShade.style.opacity = shade(END_Z - cam);
+  put(endShade, 'opacity', shade(END_Z - cam));
 
   const last = cams(narrow).length - 1;
   backBtn.setAttribute('aria-disabled', String(step === 0));
