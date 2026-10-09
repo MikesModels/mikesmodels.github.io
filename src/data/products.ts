@@ -17,6 +17,9 @@ export type Product = {
   colours?: Colour[];
 };
 
+/** Mike's Etsy shop. Empty cases' "Buy on Etsy" button goes here; products link to their own listing. */
+export const ETSY_SHOP = 'https://www.etsy.com/shop/REPLACE_ME';
+
 /** Number of display cases in the hall. */
 export const CASES = 12;
 

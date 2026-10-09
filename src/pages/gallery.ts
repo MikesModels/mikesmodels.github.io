@@ -1,6 +1,6 @@
 import '../styles/site.css';
 import '../styles/gallery.css';
-import { CASES, PRODUCTS, coloursOf, swatchFill, photoUrl, type Product } from '../data/products';
+import { CASES, ETSY_SHOP, PRODUCTS, coloursOf, swatchFill, photoUrl, type Product } from '../data/products';
 import { bayHtml, wallHtml, caseHtml } from './gallery-markup';
 import { trackEtsyClick } from '../lib/submit';
 import { initBackNav } from '../lib/nav';
@@ -120,10 +120,10 @@ function fillPanel(i: number) {
   $('[data-p-origin]').hidden = !p?.origin;
   shop.hidden = !p; soon.hidden = !!p;
   mailto.href = 'mailto:mikes3dmodels@gmail.com?subject=' + encodeURIComponent(p ? `Question about the ${p.name}` : `Gallery case ${pad(i + 1)}`);
+  etsy.href = p ? p.etsy : ETSY_SHOP;
   panel.scrollTop = 0;
   if (!p) return;
 
-  etsy.href = p.etsy;
   const cs = coloursOf(p);
   $('[data-colours]').hidden = !cs.length;
   colourName.textContent = '';
@@ -135,10 +135,10 @@ swatches.addEventListener('mouseover', e => {
   if (n) colourName.textContent = `: ${n}`;
 });
 swatches.addEventListener('mouseleave', () => (colourName.textContent = ''));
-// Count the click (product + case only), then let the link open Etsy as normal.
+// Count the click (product + case only), then let the link open Etsy as normal. Empty cases link to the shop.
 etsy.addEventListener('click', () => {
-  const p = item(state.sel ?? -1);
-  if (p) trackEtsyClick(p.name, pad(state.sel! + 1));
+  if (state.sel == null) return;
+  trackEtsyClick(item(state.sel)?.name ?? 'Etsy shop (from an empty case)', pad(state.sel + 1));
 });
 
 let settle = 0;
@@ -163,7 +163,7 @@ function open(i: number) {
   // Focus the panel once it has faded in, so keyboard users land on its actions.
   setTimeout(() => {
     if (state.sel !== i) return;
-    (item(i) ? etsy : soon.querySelector<HTMLElement>('a')!).focus({ preventScroll: true });
+    etsy.focus({ preventScroll: true });
   }, 720);
 }
 function close() {
