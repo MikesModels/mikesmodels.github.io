@@ -18,7 +18,7 @@ export type Product = {
 };
 
 /** Mike's Etsy shop. Empty cases' "Buy on Etsy" button goes here; products link to their own listing. */
-export const ETSY_SHOP = 'https://www.etsy.com/shop/REPLACE_ME';
+export const ETSY_SHOP = 'https://www.etsy.com/shop/MikesModelsShop';
 
 /** Number of display cases in the hall. */
 export const CASES = 12;
